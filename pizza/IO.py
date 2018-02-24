@@ -2,9 +2,9 @@ from verbose import *
 import numpy as np
 
 
-def write_list(f, list):
+def write_list(f, l):
 
-    f.write(" ".join([str(n) for n in list]) + "\n")
+    f.write(" ".join([str(n) for n in l]) + "\n")
 
 def write_array(f, array):
 
@@ -30,7 +30,9 @@ def read_input(reader):
     return R, C, L, H, pizza
 
 
-def write_output(f, list_output, array_output):
-
-    write_list(f, list_output)
+def write_output(f, number_of_slices, array_output):
+    '''
+    Takes a number of slices and a list of slices
+    '''
+    write_list(f, [number_of_slices])
     write_array(f, array_output)
