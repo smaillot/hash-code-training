@@ -6,38 +6,38 @@ import numpy as np
 # custom
 from verbose import *
 
-def num_mushrooms(slice, pizza):
+def num_mushrooms(slices, pizza):
 
-    return np.sum(pizza[slice[0]:slice[2], slice[1]:slice[3]])
+    return np.sum(pizza[slices[0]:slices[2]+1, slices[1]:slices[3]+1])
 
-def size_slice(slice):
+def size_slice(slices):
 
-    return slice.shape[0] * slice.shape[1] 
+    return (slices[3] - slices[1]+1) * (slices[2] - slices[0]+1)
 
-def is_valid_slice(slice, pizza, r, c, l, h):
+def is_valid_slice(slices, pizza, r, c, l, h):
 
-    if slice[2] < slice[0] or slice[3] < slice[1]:
-        fatal("Non valid slice")
+    if slices[2] < slices[0] or slices[3] < slices[1]:
+        fatal("Non valid slices")
         return False
 
-    if slice[0] < 0 or slice[2] > r or slice[1] < 0 or slice[3] > c:
-        fatal("Pizza slice out of dimensions")
+    if slices[0] < 0 or slices[2] > r or slices[1] < 0 or slices[3] > c:
+        fatal("Pizza slices out of dimensions")
         return False
 
-    nm = num_mushrooms(slice, pizza)
+    nm = num_mushrooms(slices, pizza)
 
     if nm < l:
         
-        fatal("Not enough mushrooms")
-        return false
+        fatal("Not enough mushrooms (" + str(nm) + ")")
+        return False
     
-    area = size_slice(slice)
+    area = size_slice(slices)
     nt = area - nm
 
     if nt < l:
         
         fatal("Not enough tomatoes")
-        return false
+        return False
 
     if area > h:
 
@@ -52,12 +52,12 @@ def check_overlapping(slices, r, c):
 
     for i in progress(range(len(slices)), desc="checking overlapping"):
 
-        if  np.sum(pizza[slices[i][0]:slices[i][2], slices[i][1]:slices[i][3]]) > 0:
+        if  np.sum(pizza[slices[i][0]:slices[i][2]+1, slices[i][1]:slices[i][3]+1]) > 0:
 
             fatal("Overlapping slices")
             return False
 
-        pizza[slices[i][0]:slices[i][2], slices[i][1]:slices[i][3]] = 1
+        pizza[slices[i][0]:slices[i][2]+1, slices[i][1]:slices[i][3]+1] = 1
 
     return True
 
@@ -65,10 +65,10 @@ def check_slices(slices, pizza, r, c, l, h):
 
     info("Checking slices validity")
     for i in progress(range(len(slices)), desc="checking slice validity"):
+        
+        if not is_valid_slice(slices[i], pizza, r, c, l, h):
 
-        if not is_valid_slice(slice, pizza, r, c, l, h):
-
-            Fatal("Non valid slice " + str(i))
+            fatal("Non valid slice " + str(i))
             return False
 
     info("Checking overlapping")
