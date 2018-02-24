@@ -2,9 +2,15 @@ from verbose import *
 import numpy as np
 
 
+<<<<<<< HEAD
 def write_list(f, number_of_slices):
 
     f.write(" ".join([str(n) for n in number_of_slices]) + "\n")
+=======
+def write_list(f, l):
+
+    f.write(" ".join([str(n) for n in l]) + "\n")
+>>>>>>> feature/disp
 
 def write_array(f, array):
 
