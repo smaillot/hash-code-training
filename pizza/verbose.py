@@ -44,7 +44,7 @@ def debug(msg):
 
 def end_color():
 
-    print ccolor.ENDC
+    print(ccolor.ENDC)
 
 try:
     from tqdm import tqdm as progress
