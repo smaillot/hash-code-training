@@ -25,3 +25,11 @@ def generate_all_slices(R, C, L, H):
                 
     return list_of_slices
 
+def gen_slice(starting_point, origin_slice):
+    '''
+    Takes a slice starting from the origin (like all generated from generate_all_slices) and translates it to the starting point
+    Sends an error if slice is outside 
+    '''
+    if origin_slice[0] != 0 or origin_slice[1] != 0:
+        raise "not an origin slice"
+    
