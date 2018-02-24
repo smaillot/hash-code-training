@@ -1,25 +1,16 @@
 # compatibility
 from __future__ import division
 from __future__ import print_function
+import numpy as np
 
 # custom
 from verbose import *
 
-def compute_score(output):
-    
-    return 4
+def count_cells(slice):
 
-    
+    return slice[2] - slice[0] + slice [3] - slice[1]
 
-def nirina(x):
-    """
-    Cette fonction a fait ce qu'on lui demande
-    blbl
-    """
-    return x
+def compute_score(cuttings):
 
-def test2(x):
-    """
-    Cette fonction ne fait rien
-    """
-    2
+    return np.sum([count_cells(slice) for slice in cuttings])
+
