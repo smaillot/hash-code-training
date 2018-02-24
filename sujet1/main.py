@@ -36,8 +36,8 @@ try:
     info('Input file:' + str(args.input))
     info('Output file:' + str(args.output))
     print("\n")
-except IOError, msg:
-    parser.error(str(msg))
+except IOError as error:
+    parser.error(error)
     
 
 input1, input2, input3, input4 = read_input(args.input)
