@@ -17,3 +17,9 @@ def nirina(x):
     blbl
     """
     return x
+
+def test2(x):
+    """
+    Cette fonction ne fait rien
+    """
+    2
