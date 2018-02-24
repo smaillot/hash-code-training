@@ -1,3 +1,8 @@
+"""
+Since we are are bilingual I suggest we write everything in English
+
+"""
+
 # compatibility
 from __future__ import division
 from __future__ import print_function
