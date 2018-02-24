@@ -1,6 +1,6 @@
 from verbose import *
 import numpy as np
-import matplotlib.pyplot as plt
+
 
 def write_list(f, list):
 
@@ -28,15 +28,6 @@ def read_input(reader):
     
     
     return R, C, L, H, pizza
-
-def disp_pizza(pizza):
-    '''
-    Violet is a tomato
-    Yellow is a mushroom
-    '''
-
-    plt.imshow(pizza)
-    plt.show()
 
 
 def write_output(f, list_output, array_output):
