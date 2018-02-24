@@ -7,7 +7,7 @@ from verbose import *
 
 def compute_score(output):
     
-    return 44
+    return -2
 
     
 
