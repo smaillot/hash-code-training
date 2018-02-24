@@ -6,15 +6,15 @@ import numpy as np
 # custom
 from verbose import *
 
-def num_mushrooms(slice):
+def num_mushrooms(slice, pizza):
 
-    return np.sum(slice)
+    return np.sum(pizza[slice[0]:slice[2], slice[1]:slice[3]])
 
 def size_slice(slice):
 
     return slice.shape[0] * slice.shape[1] 
 
-def is_valid_slice(slice, r, c, l, h):
+def is_valid_slice(slice, pizza, r, c, l, h):
 
     if slice[2] < slice[0] or slice[3] < slice[1]:
         fatal("Non valid slice")
@@ -24,7 +24,7 @@ def is_valid_slice(slice, r, c, l, h):
         fatal("Pizza slice out of dimensions")
         return False
 
-    nm = num_mushrooms(slice)
+    nm = num_mushrooms(slice, pizza)
 
     if nm < l:
         
@@ -61,12 +61,12 @@ def check_overlapping(slices, r, c):
 
     return True
 
-def check_slices(slices, r, c, l, h):
+def check_slices(slices, pizza, r, c, l, h):
 
     info("Checking slices validity")
     for i in progress(range(len(slices)), desc="checking slice validity"):
 
-        if not is_valid_slice(slice, r, c, l, h):
+        if not is_valid_slice(slice, pizza, r, c, l, h):
 
             Fatal("Non valid slice " + str(i))
             return False
