@@ -11,3 +11,8 @@ def compute_score(output):
 
     
 
+def nirina(x):
+    """
+    Cette fonction a fait ce qu'on lui demande
+    """
+    return x
