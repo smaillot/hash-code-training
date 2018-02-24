@@ -4,6 +4,7 @@ from __future__ import print_function
 
 # custom
 from verbose import *
+from validation import is_valid_slice
 import numpy as np
 
 def generate_all_slices(R, C, L, H):
@@ -31,5 +32,13 @@ def gen_slice(starting_point, origin_slice):
     Sends an error if slice is outside 
     '''
     if origin_slice[0] != 0 or origin_slice[1] != 0:
-        raise "not an origin slice"
+        fatal("Non origin slice")
+        raise "Cet endroit est problématique"
+        #TODO : wouhou une if qui renvoie rien mais on veut foutre la merde
+    else:
+        x, y = starting_point
+        _, _, row, col = origin_slice
+        return [x, y, row + x, col + y]
+
+    
     
