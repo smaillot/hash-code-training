@@ -1,4 +1,6 @@
 from verbose import *
+import numpy as np
+import matplotlib.pyplot as plt
 
 def write_list(f, list):
 
@@ -11,21 +13,31 @@ def write_array(f, array):
         write_list(f, line)
 
 def read_input(reader):
+    '''
+    init params
+    # number of rows, number of columns, minimum number of each ingredient cells in a slice, maximum number of cells of a slice
+    True is a mushroom, False is a Tomato
+    '''
+    R, C, L, H = [int(i) for i in reader.readline().split(" ")]
     
-    ## init params
-    input1, input2, input3 = [int(i) for i in reader.readline().split(" ")]
     
-    ## n blbl
-    input4 = [int(i) for i in reader.readline().split(" ")]
-    
-    ## blbl
-    tab = []
-    for _ in range(input4[0]):
+    pizza = np.zeros([R, C], dtype = bool)
+    for i in range(R):
         
-        tab.append([int(i) for i in reader.readline().split(" ")])
+        pizza[i, :] = [c == 'M' for c in list(reader.readline().rstrip())]
     
     
-    return input1, input2, input3, tab
+    return R, C, L, H, pizza
+
+def disp_pizza(pizza):
+    '''
+    Violet is a tomato
+    Yellow is a mushroom
+    '''
+
+    plt.imshow(pizza)
+    plt.show()
+
 
 def write_output(f, list_output, array_output):
 
