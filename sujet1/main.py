@@ -40,7 +40,7 @@ except IOError, msg:
     parser.error(str(msg))
     
 
-input1, input2, input3, input4 = read_input(args.input)
+# = read_input(args.input)
 
 start = time()
 
@@ -50,23 +50,6 @@ start = time()
 
 
 
-print("blbl")
-debug("je viens de print blbl")
-print("blbl")
-info("i'm so proud of myself")
-print("blbl")
-warn("legere fusion du reacteur, don't panic")
-print("blbl")
-fatal("boom !")
-print("blbl")
-info("this was a test")
-print("\n\n")
-
-for i in progress(range(10**7), desc="computing"):
-    pass
-
-output = np.array(input4) * 2
-
 
       
 ###########################
@@ -75,10 +58,10 @@ output = np.array(input4) * 2
 
 end = time()
 
-write_output(args.output, [1, 2, 3], output)
+#write_output(args.output)
 
 ## compute score
-score = compute_score(output)
+score = compute_score()
 
 print("\n\n\n")
 info("Score {0:.0f} in {1:.6f}s".format(score, (end - start)))
