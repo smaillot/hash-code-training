@@ -13,19 +13,17 @@ def write_array(f, array):
 def read_input(reader):
     
     ## init params
-    input1, input2, input3 = [int(i) for i in reader.readline().split(" ")]
+    # number of rows, number of columns, minimum number of each ingredient cells in a slice, maximum number of cells of a slice
+    R, C, L, H = [int(i) for i in reader.readline().split(" ")]
     
-    ## n blbl
-    input4 = [int(i) for i in reader.readline().split(" ")]
     
-    ## blbl
-    tab = []
-    for _ in range(input4[0]):
+    pizza = []
+    for _ in range(R):
         
-        tab.append([int(i) for i in reader.readline().split(" ")])
+        pizza.append(list(reader.readline().rstrip()))
     
     
-    return input1, input2, input3, tab
+    return R, C, L, H, pizza
 
 def write_output(f, list_output, array_output):
 
