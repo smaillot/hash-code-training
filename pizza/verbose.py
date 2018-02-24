@@ -42,6 +42,10 @@ def debug(msg):
         
         print(ccolor.GRAY + "[DEBUG] " + ccolor.GRAY + msg + ccolor.ENDC)
 
+def end_color():
+
+    print(ccolor.ENDC)
+
 try:
     from tqdm import tqdm as progress
 except:

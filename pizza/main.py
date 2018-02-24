@@ -13,6 +13,7 @@ from IO import read_input, write_output
 from solution import *
 from score import compute_score
 from disp_debug import disp_pizza
+from validation import check_slices
 
 ## parsing arguments
 parser = argparse.ArgumentParser(description='Test program.')
@@ -41,7 +42,7 @@ except IOError as error:
     parser.error(error)
     
 
-# = read_input(args.input)
+R, C, L, H, pizza = read_input(args.input)
 
 start = time()
 
@@ -50,7 +51,8 @@ start = time()
 ###########################
 
 
-
+# forced solution for small.in
+slices = np.array([[0, 0, 0, 1], [1, 0, 2, 0]])
 
       
 ###########################
@@ -59,11 +61,14 @@ start = time()
 
 end = time()
 
-#write_output(args.output)
+valid = check_slices(slices, pizza, R, C, L, H)
+write_output(args.output, slices)
 
 ## compute score
-'''score = compute_score()
+
+score = compute_score(slices) * valid
 
 print("\n\n\n")
 info("Score {0:.0f} in {1:.6f}s".format(score, (end - start)))
-print("\n\n")'''
+print("\n\n")
+end_color()

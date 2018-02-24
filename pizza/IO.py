@@ -30,9 +30,10 @@ def read_input(reader):
     return R, C, L, H, pizza
 
 
-def write_output(f, number_of_slices, array_output):
+def write_output(f, array_output):
     '''
     Takes a number of slices and a list of slices
     '''
+    number_of_slices = len(array_output)
     write_list(f, [number_of_slices])
     write_array(f, array_output)
