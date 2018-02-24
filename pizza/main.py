@@ -9,7 +9,7 @@ import numpy as np
 
 # custom
 from verbose import *
-from IO import read_input, write_output
+from IO import read_input, write_output, disp_pizza
 from solution import *
 from score import compute_score
 
