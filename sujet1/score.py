@@ -16,3 +16,9 @@ def nirina(x):
     Cette fonction a fait ce qu'on lui demande
     """
     return x
+
+def test2(x):
+    """
+    Cette fonction ne fait rien
+    """
+    2
