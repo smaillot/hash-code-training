@@ -1,10 +1,16 @@
 from verbose import *
 import numpy as np
-import matplotlib.pyplot as plt
 
-def write_list(f, list):
 
-    f.write(" ".join([str(n) for n in list]) + "\n")
+<<<<<<< HEAD
+def write_list(f, number_of_slices):
+
+    f.write(" ".join([str(n) for n in number_of_slices]) + "\n")
+=======
+def write_list(f, l):
+
+    f.write(" ".join([str(n) for n in l]) + "\n")
+>>>>>>> feature/disp
 
 def write_array(f, array):
 
@@ -29,17 +35,10 @@ def read_input(reader):
     
     return R, C, L, H, pizza
 
-def disp_pizza(pizza):
+
+def write_output(f, number_of_slices, array_output):
     '''
-    Violet is a tomato
-    Yellow is a mushroom
+    Takes a number of slices and a list of slices
     '''
-
-    plt.imshow(pizza)
-    plt.show()
-
-
-def write_output(f, list_output, array_output):
-
-    write_list(f, list_output)
+    write_list(f, [number_of_slices])
     write_array(f, array_output)

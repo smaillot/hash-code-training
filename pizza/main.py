@@ -12,6 +12,7 @@ from verbose import *
 from IO import read_input, write_output
 from solution import *
 from score import compute_score
+from disp_debug import disp_pizza
 
 ## parsing arguments
 parser = argparse.ArgumentParser(description='Test program.')
@@ -61,8 +62,8 @@ end = time()
 #write_output(args.output)
 
 ## compute score
-score = compute_score()
+'''score = compute_score()
 
 print("\n\n\n")
 info("Score {0:.0f} in {1:.6f}s".format(score, (end - start)))
-print("\n\n")
+print("\n\n")'''
