@@ -103,35 +103,45 @@ def generate_solution_slices(R, C, L, H, pizza, seed = []):
 
 
         
-def worker(best_score, best_slices, number_solutions, number_tries, l, number_proc, q):
-    
-    progress_bar = None
+def worker(best_score, best_slices, number_tries, l, number_proc, q):
+    # Progress bar that is updated by process 0
+    progress_bar = range(number_tries)
     if number_proc == 0:
         progress_bar = tqdm(range(number_tries), desc = "Avancement simulations")
         
 
-    continue_calculus = True
+    
     pizza = q.get()
     
-    while continue_calculus:
+    for k in progress_bar:
         
         seed = np.random.randint(2**31)
 
+        # This should be easily paralelised
         slices = pizza.gen_slices(seed)
         score = compute_score(slices)
         
         # Lock state to prevent race condition
+
         l.acquire()
-        number_solutions.value += 1
+        # Raise number of tested solutions
+        
+        # Our solution is better than the current best
         if score > best_score.value:
             best_score.value = score
             
             best_slices[0] = slices
         
-        continue_calculus = number_solutions.value < number_tries
-        if number_proc == 0:
-            progress_bar.update(number_solutions.value)
+        # We don't want to overshoot our number of tests
+        
+        
+        # Updating progress bar
+       
+            
         l.release()
+
+    print(k)
+    
 
      
     
