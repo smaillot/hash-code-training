@@ -74,6 +74,7 @@ if __name__ == '__main__':
     p.join()
 
     slices = slices[0]
+    slices = extend_slices(slices, pizza, R, C, L, H)
 
         
     ###########################
