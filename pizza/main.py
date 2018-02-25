@@ -8,12 +8,13 @@ from time import time
 import numpy as np
 import multiprocessing as mp 
 # custom
-from IO import read_input, write_output
+from IO import read_input, write_output, display_slices
 from pizza import *
 from solution import *
 from score import *
 from disp_debug import disp_pizza
 from validation import check_slices
+import matplotlib.pylab as plt
 
 
 if __name__ == '__main__':
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     ###########################
     
     pizza_test = Pizza(R, C, L, H, pizza)
-    pizza_tests = [Pizza_seed(pizza_test, i) for i in range(30)]
+    pizza_tests = [Pizza_seed(pizza_test, i) for i in range(3)]
     best_score = mp.Value('i', 0)
     slices = mp.Manager().list([[]])
     lock = mp.Lock()
@@ -69,8 +70,8 @@ if __name__ == '__main__':
     end = time()
     write_output(args.output, slices)
     valid = check_slices(slices, pizza, R, C, L, H)
-
-
+    display_slices(slices, R, C, pizza)
+    plt.show()
     ## compute score
     score = compute_score(slices) * valid
 

@@ -58,3 +58,4 @@ def display_slices(solution, R, C, pizza):
     fig, axes = plt.subplots(ncols=2, sharex=True, sharey=True)
     axes[0].imshow(mask)
     axes[1].imshow((mask > 0).astype(np.int))
+    fig.show()
