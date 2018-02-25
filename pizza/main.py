@@ -38,41 +38,46 @@ if __name__ == '__main__':
     parser.add_argument("-n", type=int, default=2, help="number of tests")
     parser.add_argument("-p", type=int, default=2, help="number of threads")
     
-
+    # Initialising arguments
     args = parser.parse_args()
     number_tries = args.n
     number_cpu = args.p
+    # Reading inputs
     R, C, L, H, pizza = read_input(args.input)
+    # Loading pizza
+    pizza_test = Pizza(R, C, L, H, pizza)
+
+    # Setting best score and best solution
+    # Special values for bestscores and bestslices because they need to be shared
+    best_score = mp.Value('i', 0)
+    slices = mp.Manager().list([[]])
+
+    # Preventing race condition issues 
+    lock = mp.Lock()
+        
 
     start = time()
 
     ###########################
     ## DO (mostly) GOOD STUFF HERE
     ###########################
-    
-    pizza_test = Pizza(R, C, L, H, pizza)
-    pizza_tests = [Pizza_seed(pizza_test, i) for i in range(number_tries)]
-    best_score = mp.Value('i', 0)
-    number_solutions = mp.Value('i', 0)
-    slices = mp.Manager().list([[]])
-    lock = mp.Lock()
-    
-    
+    # We screen through each CPU and dedicates one thread
     for number_proc in range(number_cpu):
-        pz_t = pizza_test
+        
         p = mp.Process(target=worker, args=(best_score, slices, number_tries // number_cpu, lock, number_proc, queue))
+        # Start de process
         p.start()
-
-    
+        # Send the pizza to a process
         queue.put(pizza_test)
         
-        
+    
 
-    # Waiting
+    # Waiting for all threads to finish
     queue.close()
     queue.join_thread()
     p.join()
 
+    # Due to multiprocessing limitations we have to convert slices to a list
     slices = slices[0]
 
         
