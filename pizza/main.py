@@ -56,5 +56,5 @@ valid = check_slices(slices, pizza, R, C, L, H)
 score = compute_score(slices) * valid
 
 print("\n\n\n")
-print("Score {0:.0f} in {1:.6f}s".format(score, (end - start)))
+print("Score {:.0f} ({:0.2f}%) in {:.6f}s".format(score, 100 * score / (R * C), end - start))
 print("\n\n")
