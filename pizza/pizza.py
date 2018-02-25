@@ -1,4 +1,5 @@
-from solution import *
+from solution import generate_solution
+from numpy import copy
 
 class Pizza:
     def __init__(self, R, C, L, H, pizza):
@@ -6,7 +7,7 @@ class Pizza:
         self.C = C
         self.L = L
         self.H = H
-        self.pizza = np.copy(pizza)
+        self.pizza = copy(pizza)
     def generate_solution(self, seed):
         R = self.R
         C = self.C
