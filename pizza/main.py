@@ -58,9 +58,9 @@ if __name__ == '__main__':
     lock = mp.Lock()
     
     
-    for i in range(number_cpu):
-        pz_t = pizza_tests[i]
-        p = mp.Process(target=worker, args=(best_score, slices, number_solutions, number_tries, lock,queue))
+    for number_proc in range(number_cpu):
+        pz_t = pizza_tests[number_proc]
+        p = mp.Process(target=worker, args=(best_score, slices, number_solutions, number_tries, lock, number_proc, queue))
         p.start()
 
     
