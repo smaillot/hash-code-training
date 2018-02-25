@@ -19,11 +19,8 @@ from extend_slices import extend_slices
 
 if __name__ == '__main__':
 
-    ''' Boring stuff
-    You can pass through all of this'''
-
+    # Parsing arguments
     args = parsing()
-
     number_tries = args.n
     number_cpu = args.p
 
