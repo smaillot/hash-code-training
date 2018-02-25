@@ -109,7 +109,7 @@ def worker(best_score, best_slices, number_tries, l, number_proc, q):
     # Progress bar that is updated by process 0
     progress_bar = range(number_tries)
     if number_proc == 0:
-        progress_bar = tqdm(range(number_tries), desc = "Avancement simulations")
+        progress_bar = tqdm(range(number_tries), desc = "Advancement on process 0")
 
     # Pizza object get
     pizza = q.get()

@@ -81,3 +81,17 @@ def parsing():
     
     # Initialising arguments
     return parser.parse_args()
+
+def print_score(score, loaded_input, delay):
+    R = loaded_input.R
+    C = loaded_input.C
+    print("Score {:.0f} ({:0.2f}%) in {:.6f}s".format(score, 100 * score / (R * C), delay))
+
+def disp_input(pizza):
+    '''
+    Violet is a tomato
+    Yellow is a mushroom
+    '''
+    
+    plt.imshow(pizza)
+    plt.show()

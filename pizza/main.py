@@ -7,11 +7,10 @@ from time import time
 import numpy as np
 import multiprocessing as mp 
 # custom
-from IO import read_input, write_output, display_slices, parsing
+from IO import read_input, write_output, display_slices, parsing, print_score, disp_input
 from pizza import Pizza
 from solution import worker
 from score import compute_score
-from disp_debug import disp_pizza
 from validation import check_solution
 from matplotlib.pylab import plt
 from post_process import improve_solution
@@ -28,7 +27,7 @@ if __name__ == '__main__':
     # Reading inputs
     R, C, L, H, pizza = read_input(args.input)
     # Loading pizza
-    pizza_test = Pizza(R, C, L, H, pizza)
+    loaded_input = Pizza(R, C, L, H, pizza)
 
     # Initializing best score and best solution
     # These are shared values between processes
@@ -53,7 +52,7 @@ if __name__ == '__main__':
         # Start de process
         p.start()
         # Send the pizza to a process
-        queue.put(pizza_test)
+        queue.put(loaded_input)
 
     # Waiting for all threads to finish
     queue.close()
@@ -67,7 +66,7 @@ if __name__ == '__main__':
     ###########################
     
     # Improves the solution
-    solution = improve_solution(solution, pizza, R, C, L, H)
+    solution = improve_solution(solution, loaded_input)
  
     ###########################
     ## Checks solution and writes it out
@@ -76,7 +75,7 @@ if __name__ == '__main__':
     end = time()
 
     # Check if solution is valid
-    valid = check_solution(solution, pizza, R, C, L, H)
+    valid = check_solution(solution, loaded_input)
     # display_slices(solution, R, C, pizza)
 
     # Writing to output
@@ -84,8 +83,7 @@ if __name__ == '__main__':
     # Compute score and display
     score = compute_score(solution) * valid
 
-    print("\n\n\n")
-    print("Score {:.0f} ({:0.2f}%) in {:.6f}s".format(score, 100 * score / (R * C), end - start))
-    print("\n\n")
+    print_score(score, loaded_input, end - start)
+    
 
     # plt.show()
