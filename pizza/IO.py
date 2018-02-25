@@ -1,5 +1,6 @@
 import numpy as np
 from random import shuffle
+import matplotlib.pylab as plt
 
 def write_list(f, number_of_slices):
 
@@ -37,7 +38,7 @@ def write_output(f, array_output):
     write_list(f, [number_of_slices])
     write_array(f, array_output)
 
-def save_slices(slices):
+def save_slices(number_of_slices, slices):
 
     with open("/outputs/temp.out", 'w') as f:
 

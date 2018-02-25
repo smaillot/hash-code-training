@@ -9,6 +9,11 @@ import numpy as np
 from random import shuffle
 from score import compute_score
 from tqdm import tqdm
+from scipy import optimize
+import sys
+import numexpr as ne
+import multiprocessing as mp
+
 
 def generate_all_slices(R, C, L, H):
     '''
@@ -43,11 +48,15 @@ def gen_slice(starting_point, origin_slice):
         _, _, row, col = origin_slice
         return [x, y, row + x, col + y]
 
-def generate_solution_slices(R, C, L, H, pizza):
+def generate_solution_slices(R, C, L, H, pizza, seed = []):
     """
     Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
     """
+    if seed !=[]:
+        np.random.seed(seed) # seed initialisation
+
     slices = []
+    
     possible_slices = generate_all_slices(R, C, L, H)
     shuffle(possible_slices)
     covered_cases = np.zeros([R, C], dtype = bool)
@@ -92,17 +101,25 @@ def generate_solution_slices(R, C, L, H, pizza):
                     
     return slices
 
-def generate_best_solution(R, C, L, H, pizza, number):
-    best_score = 0
-    best_slices = []
-    for _ in tqdm(range(number), desc = 'Testing solutions'):
-        slices = generate_solution_slices(R, C, L, H, pizza)
-        score = compute_score(slices)
-        if score > best_score:
-            best_score = score
-            best_slices = slices
-            print(best_score)
-    return best_slices
+
+        
+def worker(best_score, best_slices, l, q):
     
-                
+    pizza_seed = q.get()
+    pizza = pizza_seed.pizza
+    seed = pizza_seed.seed
+    slices = pizza.gen_slices(seed)
+    score = compute_score(slices)
+
+    # Lock state to prevent race condition
+    l.acquire()
+
+    if score > best_score.value:
+        best_score.value = score
+        
+        best_slices[0] = slices
+     
+    l.release()
+
+     
     
