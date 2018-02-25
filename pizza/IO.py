@@ -40,6 +40,6 @@ def write_output(f, number_of_slices, array_output):
 
 def save_slices(slices):
 
-    with open("/outputs/temp.out", 'w') qs f:
+    with open("/outputs/temp.out", 'w') as f:
 
         write_output(f, slices)

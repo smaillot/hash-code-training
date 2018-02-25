@@ -106,10 +106,12 @@ def generate_best_solution(R, C, L, H, pizza, number):
     progress = tqdm(range(number), desc = "Calcul d'une meilleure solution")
 
     # We generate number times seeds that will be dispatched to each core
-    seeds = [np.random.randint(0,sys.maxsize) for _ in range(number)]
+    seeds = np.array([np.random.randint(0,sys.maxsize) for _ in range(number)])
     
     def generate(seed):
         return generate_solution_slices(R, C, L, H, pizza, seed)
+
+    ne.evaluategenerate(seeds)
     
     for _ in progress:
         slices = generate_solution_slices(R, C, L, H, pizza)
