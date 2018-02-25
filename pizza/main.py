@@ -88,4 +88,4 @@ if __name__ == '__main__':
     print("Score {:.0f} ({:0.2f}%) in {:.6f}s".format(score, 100 * score / (R * C), end - start))
     print("\n\n")
 
-    plt.show()
+    #plt.show()
