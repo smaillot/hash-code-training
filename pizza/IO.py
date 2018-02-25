@@ -35,3 +35,9 @@ def write_output(f, array_output):
     number_of_slices = len(array_output)
     write_list(f, [number_of_slices])
     write_array(f, array_output)
+
+def save_slices(slices):
+
+    with open("/outputs/temp.out", 'w') qs f:
+
+        write_output(f, slices)
