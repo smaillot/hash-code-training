@@ -21,6 +21,9 @@ from extend_slices import extend_slices
 if __name__ == '__main__':
     queue = mp.Queue()
     tasks = mp.JoinableQueue()
+
+    number_cpu = min(mp.cpu_count() - 1, 1)
+
     ## parsing arguments
     parser = argparse.ArgumentParser(description='Test program.')
     parser.add_argument('input', help='path to input file', type=argparse.FileType("rt"))
@@ -32,12 +35,13 @@ if __name__ == '__main__':
     #               1 -> warnings
     #               2 -> info
     #               3 -> debug
-    parser.add_argument("-n", type=int, default=2, help="blbl")
-
+    parser.add_argument("-n", type=int, default=2, help="number of tests")
+    parser.add_argument("-p", type=int, default=2, help="number of threads")
+    
 
     args = parser.parse_args()
     number_tries = args.n
-
+    number_cpu = args.p
     R, C, L, H, pizza = read_input(args.input)
 
     start = time()
@@ -49,17 +53,19 @@ if __name__ == '__main__':
     pizza_test = Pizza(R, C, L, H, pizza)
     pizza_tests = [Pizza_seed(pizza_test, i) for i in range(number_tries)]
     best_score = mp.Value('i', 0)
+    number_solutions = mp.Value('i', 0)
     slices = mp.Manager().list([[]])
     lock = mp.Lock()
-    progress_bar = tqdm(range(len(pizza_tests)), desc = "Calcul meilleure solution")
-    for i in progress_bar:
+    
+    
+    for i in range(number_cpu):
         pz_t = pizza_tests[i]
-        p = mp.Process(target=worker, args=(best_score, slices, lock, queue,))
+        p = mp.Process(target=worker, args=(best_score, slices, number_solutions, number_tries, lock,queue))
         p.start()
 
     
-        queue.put(pz_t)
-        progress_bar.set_description("Meilleur score : " + str(best_score.value))
+        queue.put(pizza_test)
+        
         
 
     # Waiting

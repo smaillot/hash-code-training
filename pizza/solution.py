@@ -103,23 +103,28 @@ def generate_solution_slices(R, C, L, H, pizza, seed = []):
 
 
         
-def worker(best_score, best_slices, l, q):
+def worker(best_score, best_slices, number_solutions, number_tries, l, q):
+    continue_calculus = True
+    pizza = q.get()
     
-    pizza_seed = q.get()
-    pizza = pizza_seed.pizza
-    seed = pizza_seed.seed
-    slices = pizza.gen_slices(seed)
-    score = compute_score(slices)
-
-    # Lock state to prevent race condition
-    l.acquire()
-
-    if score > best_score.value:
-        best_score.value = score
+    while continue_calculus:
         
-        best_slices[0] = slices
-     
-    l.release()
+        seed = np.random.randint(2**31)
+
+        slices = pizza.gen_slices(seed)
+        score = compute_score(slices)
+        
+        # Lock state to prevent race condition
+        l.acquire()
+        number_solutions.value += 1
+        if score > best_score.value:
+            best_score.value = score
+            
+            best_slices[0] = slices
+        
+        continue_calculus = number_solutions.value < number_tries
+        
+        l.release()
 
      
     
