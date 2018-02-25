@@ -43,6 +43,7 @@ if __name__ == '__main__':
     ###########################
     ## Parallel computing
     ###########################
+    ''' Do not touch anything '''
     # We screen through each CPU and dedicate one thread for each
     for number_proc in range(number_cpu):
         
@@ -57,8 +58,9 @@ if __name__ == '__main__':
     queue.close()
     queue.join_thread()
     p.join()
-    
+
     slices = slices[0]
+    ''' You can change things again '''
     ###########################
     ## Post-treatment
     ###########################
