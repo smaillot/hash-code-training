@@ -8,6 +8,7 @@ from validation import is_valid_slice
 import numpy as np
 from random import shuffle
 from score import compute_score
+from tqdm import tqdm
 
 def generate_all_slices(R, C, L, H):
     '''
@@ -94,7 +95,7 @@ def generate_solution_slices(R, C, L, H, pizza):
 def generate_best_solution(R, C, L, H, pizza, number):
     best_score = 0
     best_slices = []
-    for i in range(number):
+    for _ in tqdm(range(number), desc = 'Testing solutions'):
         slices = generate_solution_slices(R, C, L, H, pizza)
         score = compute_score(slices)
         if score > best_score:
