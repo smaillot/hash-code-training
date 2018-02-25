@@ -14,7 +14,7 @@ from solution import *
 from score import *
 from disp_debug import disp_pizza
 from validation import check_slices
-import matplotlib.pylab as plt
+from extend_slices import extend_slices
 
 
 if __name__ == '__main__':

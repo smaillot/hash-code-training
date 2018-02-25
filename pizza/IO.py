@@ -47,15 +47,16 @@ def save_slices(number_of_slices, slices):
 def display_slices(solution, R, C, pizza):
 
     mask = np.zeros([R, C])
-    slices = solution
+    slices = np.copy(solution)
     shuffle(slices)
 
     for i in range(len(slices)):
 
         row1, col1, row2, col2 = slices[i]
-        mask[row1:row2+1, col1:col2+1] = i+1
+        mask[row1:row2+1, col1:col2+1] = i+floor(1.2*len(slices))
 
     fig, axes = plt.subplots(ncols=2, sharex=True, sharey=True)
-    axes[0].imshow(mask)
+    axes[0].imshow(mask, 'jet')
+    axes[0].set_title('Slices')
     axes[1].imshow((mask > 0).astype(np.int))
-    
+    axes[1].set_title('Pizza used')
