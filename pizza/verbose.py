@@ -22,7 +22,8 @@ def set_verbosity(v):
 
 def fatal(msg):
     
-    print(ccolor.BKG_RED + "[FATAL]" + ccolor.ENDC + " " + ccolor.RED + msg + ccolor.ENDC)
+    #print(ccolor.BKG_RED + "[FATAL]" + ccolor.ENDC + " " + ccolor.RED + msg + ccolor.ENDC)
+    (0)
 
 def warn(msg):
     

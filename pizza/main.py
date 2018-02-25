@@ -52,7 +52,8 @@ start = time()
 
 
 # forced solution for small.in
-slices = np.array([[0, 0, 0, 1], [1, 0, 2, 0]])
+# slices = np.array([[0, 0, 0, 1], [1, 0, 2, 0]])
+slices = generate_solution_slices(R, C, L, H, pizza)
 
       
 ###########################

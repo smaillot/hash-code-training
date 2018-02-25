@@ -40,5 +40,54 @@ def gen_slice(starting_point, origin_slice):
         _, _, row, col = origin_slice
         return [x, y, row + x, col + y]
 
-    
+def generate_solution_slices(R, C, L, H, pizza):
+    """
+    Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
+    """
+    slices = []
+    possible_slices = generate_all_slices(R, C, L, H)
+    covered_cases = np.zeros([R, C], dtype = bool)
+    # We screen though each case
+    for i in range(R):
+        for j in range(C):
+            # Check if this case isn't covered yet
+            if not(covered_cases[i, j]):
+                suitable_slice = False
+                k_th_slice = 0
+                # We test all possible slices until all slices tested or one valid found
+                while not(suitable_slice) and k_th_slice < len(possible_slices):
+                    
+                    pizza_slice = gen_slice([i, j], possible_slices[k_th_slice])
+                    #TODO : don't know if is_valid_slice is legit or not
+                    suitable_slice = is_valid_slice(pizza_slice, pizza, R, C, L, H)
+                    if suitable_slice:
+                    
+                        # So far we only know the slice's within the pizza's borders and has the minimum amount of mushrooms and tomatoes. Thus we have to test if it doesn't cover another slice.
+                        # We test each case in the chosen slice
+                        try:
+                            for k in range(pizza_slice[0], pizza_slice[2] + 1):
+                                for l in range(pizza_slice[1], pizza_slice[3] + 1):
+                                    if covered_cases[k, l]:
+                                        # We accountered an already covered case
+                                        # The slice isn't suitable anymore
+                                        suitable_slice = False
+                                        raise Exception()
+                        except Exception:
+                            # The slice isn't suitable so we pass the exception
+                            pass
+                        else:
+                            # The slice is good and is added to the list of slices
+                            slices.append(pizza_slice)
+                            # We have to update our array of tested cases
+                            for k in range(pizza_slice[0], pizza_slice[2] + 1):
+                                for l in range(pizza_slice[1], pizza_slice[3] + 1):
+                                    covered_cases[k, l] = True
+                    k_th_slice += 1
+            #print(slices)
+                    
+                    
+    return slices
+
+
+                
     

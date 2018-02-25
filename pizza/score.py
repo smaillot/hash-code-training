@@ -8,9 +8,9 @@ from verbose import *
 
 def count_cells(slice):
 
-    return slice[2] - slice[0] + slice [3] - slice[1]
+    return (slice[2] - slice[0] + 1) * (slice [3] - slice[1] + 1)
 
 def compute_score(cuttings):
 
-    return np.sum([count_cells(slice) for slice in cuttings])
+    return np.sum([count_cells(pizza_slice) for pizza_slice in cuttings])
 
