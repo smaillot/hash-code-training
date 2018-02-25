@@ -13,6 +13,7 @@ from solution import *
 from score import compute_score
 from disp_debug import disp_pizza
 from validation import check_slices
+from extend_slices import extend_slices
 
 ## parsing arguments
 parser = argparse.ArgumentParser(description='Test program.')
@@ -40,7 +41,8 @@ start = time()
 
 # forced solution for small.in
 # slices = np.array([[0, 0, 0, 1], [1, 0, 2, 0]])
-slices = generate_best_solution(R, C, L, H, pizza, 1000)
+slices = generate_best_solution(R, C, L, H, pizza, 10)
+slices = extend_slices(slices, pizza, R, C, L, H)
 
       
 ###########################
