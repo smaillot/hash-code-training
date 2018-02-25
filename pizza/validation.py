@@ -59,7 +59,7 @@ def check_overlapping(slices, r, c):
 
     return True
 
-def check_slices(slices, pizza, r, c, l, h):
+def check_solution(slices, pizza, r, c, l, h):
 
     # print("Checking slices validity")
     for i in tqdm(range(len(slices)), desc="checking slice validity"):

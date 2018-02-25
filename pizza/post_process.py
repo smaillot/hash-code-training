@@ -70,7 +70,7 @@ def extend_slice(input_pizza_slice, input_pizza_filling, pizza, R, C, L, H):
     
     return pizza_slice, pizza_filling
 
-def extend_slices(input_slices, pizza, R, C, L, H):
+def improve_solution(input_slices, pizza, R, C, L, H):
     
     slices = np.copy(input_slices)
     pizza_filling = np.copy(compute_emptyness(slices, R, C))

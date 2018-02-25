@@ -12,9 +12,9 @@ from pizza import Pizza
 from solution import worker
 from score import compute_score
 from disp_debug import disp_pizza
-from validation import check_slices
+from validation import check_solution
 from matplotlib.pylab import plt
-from extend_slices import extend_slices
+from post_process import improve_solution
 
 
 if __name__ == '__main__':
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     # Initializing best score and best solution
     # These are shared values between processes
     best_score = mp.Value('i', 0)
-    slices = mp.Manager().list([[]])
+    solution = mp.Manager().list([[]])
 
     # Threads preparation 
     queue = mp.Queue()
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     for number_proc in range(number_cpu):
         
         # Creates a process that will be waiting for an argument
-        p = mp.Process(target=worker, args=(best_score, slices, number_tries // number_cpu, lock, number_proc, queue))
+        p = mp.Process(target=worker, args=(best_score, solution, number_tries // number_cpu, lock, number_proc, queue))
         # Start de process
         p.start()
         # Send the pizza to a process
@@ -60,14 +60,14 @@ if __name__ == '__main__':
     queue.join_thread()
     p.join()
 
-    slices = slices[0]
+    solution = solution[0]
     ''' You can change things again '''
     ###########################
     ## Post-treatment
     ###########################
     
     # Improves the solution
-    slices = extend_slices(slices, pizza, R, C, L, H)
+    solution = improve_solution(solution, pizza, R, C, L, H)
  
     ###########################
     ## Checks solution and writes it out
@@ -76,13 +76,13 @@ if __name__ == '__main__':
     end = time()
 
     # Check if solution is valid
-    valid = check_slices(slices, pizza, R, C, L, H)
-    # display_slices(slices, R, C, pizza)
+    valid = check_solution(solution, pizza, R, C, L, H)
+    # display_slices(solution, R, C, pizza)
 
     # Writing to output
-    write_output(args.output, slices)
+    write_output(args.output, solution)
     # Compute score and display
-    score = compute_score(slices) * valid
+    score = compute_score(solution) * valid
 
     print("\n\n\n")
     print("Score {:.0f} ({:0.2f}%) in {:.6f}s".format(score, 100 * score / (R * C), end - start))
