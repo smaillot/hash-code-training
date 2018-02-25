@@ -57,7 +57,7 @@ def display_slices(solution, R, C, pizza):
         row1, col1, row2, col2 = slices[i]
         mask[row1:row2+1, col1:col2+1] = i+floor(1.2*len(slices))
 
-    fig, axes = plt.subplots(ncols=2, sharex=True, sharey=True)
+    _, axes = plt.subplots(ncols=2, sharex=True, sharey=True)
     axes[0].imshow(mask, 'jet')
     axes[0].set_title('Slices')
     axes[1].imshow((mask > 0).astype(np.int))

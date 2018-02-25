@@ -8,9 +8,9 @@ import numpy as np
 import multiprocessing as mp 
 # custom
 from IO import read_input, write_output, display_slices, parsing
-from pizza import *
-from solution import *
-from score import *
+from pizza import Pizza
+from solution import worker
+from score import compute_score
 from disp_debug import disp_pizza
 from validation import check_slices
 from matplotlib.pylab import plt
