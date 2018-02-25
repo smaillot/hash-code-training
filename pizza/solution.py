@@ -9,6 +9,8 @@ import numpy as np
 from random import shuffle
 from score import compute_score
 from tqdm import tqdm
+from scipy import optimize
+
 
 def generate_all_slices(R, C, L, H):
     '''
