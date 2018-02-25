@@ -77,7 +77,7 @@ if __name__ == '__main__':
     end = time()
     write_output(args.output, slices)
     valid = check_slices(slices, pizza, R, C, L, H)
-    display_slices(slices, R, C, pizza)
+    #display_slices(slices, R, C, pizza)
     
     ## compute score
     score = compute_score(slices) * valid
