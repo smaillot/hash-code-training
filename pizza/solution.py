@@ -16,8 +16,7 @@ import multiprocessing as mp
 
 
 def generate_all_slices(R, C, L, H):
-    '''
-    Specific to this problem
+    '''Specific
     L : minimum number of each ingredient in a slice
     H : max size for a slice
     We generate all the possible slices that we can make out of the pizza. We know that their size (or area) is between 2 * L and H
@@ -36,8 +35,7 @@ def generate_all_slices(R, C, L, H):
     return list_of_slices
 
 def gen_slice(starting_point, origin_slice):
-    '''
-    Specific to this problem
+    '''Specific
     Takes a slice starting from the origin (like all generated from generate_all_slices) and translates it to the starting point
     Sends an error if slice is outside 
     '''
@@ -51,7 +49,7 @@ def gen_slice(starting_point, origin_slice):
         return [x, y, row + x, col + y]
 
 def generate_solution(R, C, L, H, pizza, seed_number = []):
-    """
+    """Specific
     Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
     """
     if seed_number !=[]:
@@ -73,11 +71,12 @@ def generate_solution(R, C, L, H, pizza, seed_number = []):
                 while not(suitable_slice) and k_th_slice < len(possible_slices):
                     
                     pizza_slice = gen_slice([i, j], possible_slices[k_th_slice])
-                    #TODO : don't know if is_valid_slice is legit or not
+                    
                     suitable_slice = is_valid_slice(pizza_slice, pizza, R, C, L, H)
                     if suitable_slice:
                     
-                        # So far we only know the slice's within the pizza's borders and has the minimum amount of mushrooms and tomatoes. Thus we have to test if it doesn't cover another slice.
+                        # So far we only know the slice's within the pizza's borders and has the minimum amount of mushrooms and tomatoes.
+                        # Thus we have to test if it doesn't cover another slice.
                         # We test each case in the chosen slice
                         try:
                             for k in range(pizza_slice[0], pizza_slice[2] + 1):
@@ -98,16 +97,13 @@ def generate_solution(R, C, L, H, pizza, seed_number = []):
                                 for l in range(pizza_slice[1], pizza_slice[3] + 1):
                                     covered_cases[k, l] = True
                     k_th_slice += 1
-            #print(slices)
-                    
-                    
+           
     return slices
 
 
         
 def worker(best_score, best_slices, number_tries, l, number_proc, q):
-    """
-    This function can be generalised
+    """General
     q.get() must be a pizza with the method generate_solution(int seed)
     """
     # Progress bar that is updated by process 0

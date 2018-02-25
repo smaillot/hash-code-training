@@ -30,12 +30,12 @@ if __name__ == '__main__':
     # Loading pizza
     pizza_test = Pizza(R, C, L, H, pizza)
 
-    # Setting best score and best solution
+    # Initializing best score and best solution
     # These are shared values between processes
     best_score = mp.Value('i', 0)
     slices = mp.Manager().list([[]])
 
-    # Thread preparation 
+    # Threads preparation 
     queue = mp.Queue()
     lock = mp.Lock() # Prevents race conditions
 
@@ -44,8 +44,7 @@ if __name__ == '__main__':
     ## Parallel computing
     ###########################
     """ Do not touch anything
-    Change solution.worker to change the solution's generator behavior
-    """
+    Change solution.worker to change the solution's generator behavior """
     # We screen through each CPU and dedicate one thread for each
     for number_proc in range(number_cpu):
         
@@ -75,15 +74,18 @@ if __name__ == '__main__':
     ###########################
 
     end = time()
-    write_output(args.output, slices)
+
+    # Check if solution is valid
     valid = check_slices(slices, pizza, R, C, L, H)
-    #display_slices(slices, R, C, pizza)
-    
-    ## compute score
+    # display_slices(slices, R, C, pizza)
+
+    # Writing to output
+    write_output(args.output, slices)
+    # Compute score and display
     score = compute_score(slices) * valid
 
     print("\n\n\n")
     print("Score {:.0f} ({:0.2f}%) in {:.6f}s".format(score, 100 * score / (R * C), end - start))
     print("\n\n")
 
-    #plt.show()
+    # plt.show()
