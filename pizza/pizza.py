@@ -13,5 +13,5 @@ class Pizza:
         L = self.L
         H = self.H
         pizza = self.pizza
-        return generate_solution_slices(R, C, L, H, pizza, seed)
+        return generate_solution(R, C, L, H, pizza, seed)
 

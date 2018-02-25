@@ -6,7 +6,7 @@ from __future__ import print_function
 # custom
 from validation import is_valid_slice
 import numpy as np
-from random import shuffle
+from random import shuffle, randint
 from score import compute_score
 from tqdm import tqdm
 from scipy import optimize
@@ -17,6 +17,7 @@ import multiprocessing as mp
 
 def generate_all_slices(R, C, L, H):
     '''
+    Specific to this problem
     L : minimum number of each ingredient in a slice
     H : max size for a slice
     We generate all the possible slices that we can make out of the pizza. We know that their size (or area) is between 2 * L and H
@@ -36,6 +37,7 @@ def generate_all_slices(R, C, L, H):
 
 def gen_slice(starting_point, origin_slice):
     '''
+    Specific to this problem
     Takes a slice starting from the origin (like all generated from generate_all_slices) and translates it to the starting point
     Sends an error if slice is outside 
     '''
@@ -48,7 +50,7 @@ def gen_slice(starting_point, origin_slice):
         _, _, row, col = origin_slice
         return [x, y, row + x, col + y]
 
-def generate_solution_slices(R, C, L, H, pizza, seed = []):
+def generate_solution(R, C, L, H, pizza, seed = []):
     """
     Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
     """
@@ -104,40 +106,34 @@ def generate_solution_slices(R, C, L, H, pizza, seed = []):
 
         
 def worker(best_score, best_slices, number_tries, l, number_proc, q):
+    """
+    This function can be generalised
+    q.get() must be a pizza with the method generate_solution(int seed)
+    """
     # Progress bar that is updated by process 0
     progress_bar = range(number_tries)
     if number_proc == 0:
         progress_bar = tqdm(range(number_tries), desc = "Avancement simulations")
-        
 
-    
+    # Pizza object get
     pizza = q.get()
     
     for _ in progress_bar:
         
-        seed = np.random.randint(2**31)
-
-        # This should be easily paralelised
+        # We calculate a solution from a seed and evaluate its score
+        seed = randint(0, 2**31)        
         slices = pizza.generate_solution(seed)
         score = compute_score(slices)
         
         # Lock state to prevent race condition
-
         l.acquire()
-        # Raise number of tested solutions
-        
-        # Our solution is better than the current best
+
+        # If our solution is better we save it in the shared variable
         if score > best_score.value:
             best_score.value = score
             
             best_slices[0] = slices
-        
-        # We don't want to overshoot our number of tests
-        
-        
-        # Updating progress bar
-       
-            
+        # End of atomic operation
         l.release()
 
     

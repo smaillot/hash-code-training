@@ -2,6 +2,7 @@ import numpy as np
 from random import shuffle
 import matplotlib.pylab as plt
 from math import floor
+import argparse
 
 def write_list(f, number_of_slices):
 
@@ -61,3 +62,22 @@ def display_slices(solution, R, C, pizza):
     axes[0].set_title('Slices')
     axes[1].imshow((mask > 0).astype(np.int))
     axes[1].set_title('Pizza used')
+
+def parsing():
+    ## parsing arguments
+    parser = argparse.ArgumentParser(description='Test program.')
+
+    parser.add_argument('input', help='path to input file', type=argparse.FileType("rt"))
+    parser.add_argument('output', help='path to output file', type=argparse.FileType("wt"))
+    parser.add_argument("-v", "--verbosity", type=int, choices=[0, 1, 2, 3],
+                        default=1,
+                        help="increase output verbosity,")
+    # verbosity:    0 -> quiet
+    #               1 -> warnings
+    #               2 -> info
+    #               3 -> debug
+    parser.add_argument("-n", type=int, default=2, help="number of tests")
+    parser.add_argument("-p", type=int, default=2, help="number of threads")
+    
+    # Initialising arguments
+    return parser.parse_args()
