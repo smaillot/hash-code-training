@@ -105,7 +105,7 @@ def generate_solution_slices(R, C, L, H, pizza, seed = []):
         
 def worker(best_score, best_slices, number_solutions, number_tries, l, number_proc, q):
     
-    
+    progress_bar = None
     if number_proc == 0:
         progress_bar = tqdm(range(number_tries), desc = "Avancement simulations")
         
@@ -129,7 +129,8 @@ def worker(best_score, best_slices, number_solutions, number_tries, l, number_pr
             best_slices[0] = slices
         
         continue_calculus = number_solutions.value < number_tries
-        progress_bar.update(number_solutions.value)
+        if number_proc == 0:
+            progress_bar.update(number_solutions.value)
         l.release()
 
      
