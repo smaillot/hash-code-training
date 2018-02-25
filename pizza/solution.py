@@ -1,9 +1,9 @@
+# -*-coding:Latin-1 -*
 # compatibility
 from __future__ import division
 from __future__ import print_function
 
 # custom
-from verbose import *
 from validation import is_valid_slice
 import numpy as np
 
@@ -32,7 +32,7 @@ def gen_slice(starting_point, origin_slice):
     Sends an error if slice is outside 
     '''
     if origin_slice[0] != 0 or origin_slice[1] != 0:
-        fatal("Non origin slice")
+        # print("Non origin slice")
         raise "Cet endroit est problématique"
         #TODO : wouhou une if qui renvoie rien mais on veut foutre la merde
     else:
