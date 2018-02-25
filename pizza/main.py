@@ -43,7 +43,7 @@ if __name__ == '__main__':
     ###########################
     
     pizza_test = Pizza(R, C, L, H, pizza)
-    pizza_tests = [Pizza_seed(pizza_test, i) for i in range(4)]
+    pizza_tests = [Pizza_seed(pizza_test, i) for i in range(56)]
     best_score = mp.Value('i', 0)
     slices = mp.Manager().list()
     lock = mp.Lock()
