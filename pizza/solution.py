@@ -6,7 +6,7 @@ from __future__ import print_function
 # custom
 from validation import is_valid_slice
 import numpy as np
-from random import shuffle, randint
+from random import shuffle, randint, seed
 from score import compute_score
 from tqdm import tqdm
 from scipy import optimize
@@ -50,12 +50,12 @@ def gen_slice(starting_point, origin_slice):
         _, _, row, col = origin_slice
         return [x, y, row + x, col + y]
 
-def generate_solution(R, C, L, H, pizza, seed = []):
+def generate_solution(R, C, L, H, pizza, seed_number = []):
     """
     Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
     """
-    if seed !=[]:
-        np.random.seed(seed) # seed initialisation
+    if seed_number !=[]:
+        seed(seed_number) # seed initialisation
 
     slices = []
     

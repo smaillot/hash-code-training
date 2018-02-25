@@ -43,7 +43,9 @@ if __name__ == '__main__':
     ###########################
     ## Parallel computing
     ###########################
-    ''' Do not touch anything '''
+    """ Do not touch anything
+    Change solution.worker to change the solution's generator behavior
+    """
     # We screen through each CPU and dedicate one thread for each
     for number_proc in range(number_cpu):
         
