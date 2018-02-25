@@ -31,9 +31,11 @@ if __name__ == '__main__':
     #               1 -> warnings
     #               2 -> info
     #               3 -> debug
+    parser.add_argument("-n", type=int, default=2, help="blbl")
+
 
     args = parser.parse_args()
-
+    number_tries = args.n
 
     R, C, L, H, pizza = read_input(args.input)
 
@@ -44,15 +46,19 @@ if __name__ == '__main__':
     ###########################
     
     pizza_test = Pizza(R, C, L, H, pizza)
-    pizza_tests = [Pizza_seed(pizza_test, i) for i in range(3)]
+    pizza_tests = [Pizza_seed(pizza_test, i) for i in range(number_tries)]
     best_score = mp.Value('i', 0)
     slices = mp.Manager().list([[]])
     lock = mp.Lock()
-    for pz_t in pizza_tests:
+    progress_bar = tqdm(range(len(pizza_tests)), desc = "Calcul meilleure solution")
+    for i in progress_bar:
+        pz_t = pizza_tests[i]
         p = mp.Process(target=worker, args=(best_score, slices, lock, queue,))
         p.start()
+
     
         queue.put(pz_t)
+        progress_bar.set_description("Meilleur score : " + str(best_score.value))
         
 
     # Waiting
@@ -71,10 +77,14 @@ if __name__ == '__main__':
     write_output(args.output, slices)
     valid = check_slices(slices, pizza, R, C, L, H)
     display_slices(slices, R, C, pizza)
-    plt.show()
+    
     ## compute score
     score = compute_score(slices) * valid
+
+    
 
     print("\n\n\n")
     print("Score {:.0f} ({:0.2f}%) in {:.6f}s".format(score, 100 * score / (R * C), end - start))
     print("\n\n")
+
+    plt.show()
