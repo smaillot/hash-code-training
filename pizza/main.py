@@ -53,7 +53,7 @@ start = time()
 
 # forced solution for small.in
 # slices = np.array([[0, 0, 0, 1], [1, 0, 2, 0]])
-slices = generate_solution_slices(R, C, L, H, pizza)
+slices = generate_best_solution(R, C, L, H, pizza, 10000)
 
       
 ###########################
@@ -61,9 +61,9 @@ slices = generate_solution_slices(R, C, L, H, pizza)
 ###########################
 
 end = time()
-
-valid = check_slices(slices, pizza, R, C, L, H)
 write_output(args.output, slices)
+valid = check_slices(slices, pizza, R, C, L, H)
+
 
 ## compute score
 

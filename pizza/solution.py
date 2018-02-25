@@ -6,6 +6,8 @@ from __future__ import print_function
 from verbose import *
 from validation import is_valid_slice
 import numpy as np
+from random import shuffle
+from score import compute_score
 
 def generate_all_slices(R, C, L, H):
     '''
@@ -46,6 +48,7 @@ def generate_solution_slices(R, C, L, H, pizza):
     """
     slices = []
     possible_slices = generate_all_slices(R, C, L, H)
+    shuffle(possible_slices)
     covered_cases = np.zeros([R, C], dtype = bool)
     # We screen though each case
     for i in range(R):
@@ -88,6 +91,17 @@ def generate_solution_slices(R, C, L, H, pizza):
                     
     return slices
 
-
+def generate_best_solution(R, C, L, H, pizza, number):
+    best_score = 0
+    best_slices = []
+    for i in range(number):
+        slices = generate_solution_slices(R, C, L, H, pizza)
+        score = compute_score(slices)
+        if score > best_score:
+            best_score = score
+            best_slices = slices
+            print(best_score)
+    return best_slices
+    
                 
     
