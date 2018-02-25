@@ -111,15 +111,14 @@ def worker(best_score, best_slices, l, q):
     slices = pizza.gen_slices(seed)
     score = compute_score(slices)
 
+    # Lock state to prevent race condition
     l.acquire()
-    print(best_slices)
-    print(best_score.value)
+
     if score > best_score.value:
         best_score.value = score
-        while(len(best_slices)):
-            best_slices.pop()
-        best_slices.append(slices)
         
+        best_slices[0] = slices
+     
     l.release()
 
      
