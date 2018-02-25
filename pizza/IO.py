@@ -1,6 +1,7 @@
 import numpy as np
 from random import shuffle
 import matplotlib.pylab as plt
+from math import floor
 
 def write_list(f, number_of_slices):
 

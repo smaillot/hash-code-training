@@ -14,6 +14,7 @@ from solution import *
 from score import *
 from disp_debug import disp_pizza
 from validation import check_slices
+from matplotlib.pylab import plt
 from extend_slices import extend_slices
 
 
