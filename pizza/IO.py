@@ -1,6 +1,4 @@
-from verbose import *
 import numpy as np
-
 
 def write_list(f, number_of_slices):
 
