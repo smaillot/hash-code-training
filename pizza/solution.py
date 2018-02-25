@@ -10,6 +10,8 @@ from random import shuffle
 from score import compute_score
 from tqdm import tqdm
 from scipy import optimize
+import sys
+import numexpr as ne
 
 
 def generate_all_slices(R, C, L, H):
@@ -45,11 +47,15 @@ def gen_slice(starting_point, origin_slice):
         _, _, row, col = origin_slice
         return [x, y, row + x, col + y]
 
-def generate_solution_slices(R, C, L, H, pizza):
+def generate_solution_slices(R, C, L, H, pizza, seed = None):
     """
     Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
     """
+    if seed != None:
+        np.random.seed(seed) # seed initialisation
+
     slices = []
+    
     possible_slices = generate_all_slices(R, C, L, H)
     shuffle(possible_slices)
     covered_cases = np.zeros([R, C], dtype = bool)
@@ -97,13 +103,24 @@ def generate_solution_slices(R, C, L, H, pizza):
 def generate_best_solution(R, C, L, H, pizza, number):
     best_score = 0
     best_slices = []
-    for _ in tqdm(range(number), desc = 'Testing solutions'):
+    progress = tqdm(range(number), desc = "Calcul d'une meilleure solution")
+
+    # We generate number times seeds that will be dispatched to each core
+    seeds = [np.random.randint(0,sys.maxsize) for _ in range(number)]
+    
+    def generate(seed):
+        return generate_solution_slices(R, C, L, H, pizza, seed)
+    
+    for _ in progress:
         slices = generate_solution_slices(R, C, L, H, pizza)
         score = compute_score(slices)
         if score > best_score:
             best_score = score
             best_slices = slices
-            print(best_score)
+            
+            
+        progress.set_description('Current best score : ' + str(best_score))
+        
     return best_slices
     
                 
