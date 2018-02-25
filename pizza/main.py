@@ -24,10 +24,9 @@ if __name__ == '__main__':
     number_cpu = args.p
 
     ''' This is where the fun begins'''
-    # Reading inputs
-    R, C, L, H, pizza = read_input(args.input)
-    # Loading pizza
-    loaded_input = Pizza(R, C, L, H, pizza)
+
+    # Loading input
+    loaded_input = Pizza(*read_input(args.input))
 
     # Initializing best score and best solution
     # These are shared values between processes

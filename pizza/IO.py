@@ -29,7 +29,7 @@ def read_input(reader):
         pizza[i, :] = [c == 'M' for c in list(reader.readline().rstrip())]
     
     
-    return R, C, L, H, pizza
+    return (R, C, L, H, pizza,)
 
 
 def write_output(f, array_output):
