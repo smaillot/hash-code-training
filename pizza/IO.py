@@ -1,4 +1,5 @@
 import numpy as np
+from random import shuffle
 
 def write_list(f, number_of_slices):
 
@@ -38,6 +39,21 @@ def write_output(f, array_output):
 
 def save_slices(slices):
 
-    with open("/outputs/temp.out", 'w') qs f:
+    with open("/outputs/temp.out", 'w') as f:
 
         write_output(f, slices)
+
+def display_slices(solution, R, C, pizza):
+
+    mask = np.zeros([R, C])
+    slices = solution
+    shuffle(slices)
+
+    for i in range(len(slices)):
+
+        row1, col1, row2, col2 = slices[i]
+        mask[row1:row2+1, col1:col2+1] = i+1
+
+    fig, axes = plt.subplots(ncols=2, sharex=True, sharey=True)
+    axes[0].imshow(mask)
+    axes[1].imshow((mask > 0).astype(np.int))
