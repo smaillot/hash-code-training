@@ -103,16 +103,24 @@ def generate_solution_slices(R, C, L, H, pizza, seed = []):
 
 
         
-def worker(pizza_seed):
-    pizza, seed = pizza_seed
+def worker(best_score, best_slices, l, q):
+    
+    pizza_seed = q.get()
+    pizza = pizza_seed.pizza
+    seed = pizza_seed.seed
     slices = pizza.gen_slices(seed)
-    
-    proc_name = mp.process.name
-    print(str(proc_name))
-    '''score = compute_score(slices)
-        if score > best_score:
-            best_score = score
-        best_slices = slices'''
-    
-                
+    score = compute_score(slices)
+
+    l.acquire()
+    print(best_slices)
+    print(best_score.value)
+    if score > best_score.value:
+        best_score.value = score
+        while(len(best_slices)):
+            best_slices.pop()
+        best_slices.append(slices)
+        
+    l.release()
+
+     
     

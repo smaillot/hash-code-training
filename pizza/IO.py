@@ -1,4 +1,3 @@
-from verbose import *
 import numpy as np
 
 
@@ -30,7 +29,7 @@ def read_input(reader):
     return R, C, L, H, pizza
 
 
-def write_output(f, number_of_slices, array_output):
+def write_output(f, array_output):
     '''
     Takes a number of slices and a list of slices
     '''
@@ -38,8 +37,8 @@ def write_output(f, number_of_slices, array_output):
     write_list(f, [number_of_slices])
     write_array(f, array_output)
 
-def save_slices(slices):
+def save_slices(number_of_slices, slices):
 
     with open("/outputs/temp.out", 'w') as f:
 
-        write_output(f, slices)
+        write_output(f, [number_of_slices], slices)
