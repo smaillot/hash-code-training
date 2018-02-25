@@ -1,7 +1,7 @@
 from solution import generate_solution
 from numpy import copy
 
-class Pizza:
+class Loaded_input:
     def __init__(self, R, C, L, H, pizza):
         self.R = R
         self.C = C

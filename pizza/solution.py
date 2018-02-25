@@ -102,9 +102,9 @@ def generate_solution(R, C, L, H, pizza, seed_number = []):
 
 
         
-def worker(best_score, best_slices, number_tries, l, number_proc, q):
+def worker(best_score, best_solution, number_tries, l, number_proc, q):
     """General
-    q.get() must be a pizza with the method generate_solution(int seed)
+    q.get() must be a loaded_input with the method generate_solution(int seed)
     """
     # Progress bar that is updated by process 0
     progress_bar = range(number_tries)
@@ -128,7 +128,7 @@ def worker(best_score, best_slices, number_tries, l, number_proc, q):
         if score > best_score.value:
             best_score.value = score
             
-            best_slices[0] = slices
+            best_solution[0] = slices
         # End of atomic operation
         l.release()
 

@@ -8,7 +8,7 @@ import numpy as np
 import multiprocessing as mp 
 # custom
 from IO import read_input, write_output, display_slices, parsing, print_score, disp_input
-from pizza import Pizza
+from pizza import Loaded_input
 from solution import worker
 from score import compute_score
 from validation import check_solution
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     ''' This is where the fun begins'''
 
     # Loading input
-    loaded_input = Pizza(*read_input(args.input))
+    loaded_input = Loaded_input(*read_input(args.input))
 
     # Initializing best score and best solution
     # These are shared values between processes
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         p = mp.Process(target=worker, args=(best_score, solution, number_tries // number_cpu, lock, number_proc, queue))
         # Start de process
         p.start()
-        # Send the pizza to a process
+        # Send the loaded input to a process
         queue.put(loaded_input)
 
     # Waiting for all threads to finish
