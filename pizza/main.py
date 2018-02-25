@@ -79,6 +79,7 @@ if __name__ == '__main__':
 
     # Due to multiprocessing limitations we have to convert slices to a list
     slices = slices[0]
+    # Improves the solution
     slices = extend_slices(slices, pizza, R, C, L, H)
 
         
