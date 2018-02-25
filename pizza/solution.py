@@ -113,12 +113,12 @@ def worker(best_score, best_slices, number_tries, l, number_proc, q):
     
     pizza = q.get()
     
-    for k in progress_bar:
+    for _ in progress_bar:
         
         seed = np.random.randint(2**31)
 
         # This should be easily paralelised
-        slices = pizza.gen_slices(seed)
+        slices = pizza.generate_solution(seed)
         score = compute_score(slices)
         
         # Lock state to prevent race condition

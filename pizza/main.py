@@ -19,7 +19,7 @@ from extend_slices import extend_slices
 
 
 if __name__ == '__main__':
-    queue = mp.Queue()
+    
     tasks = mp.JoinableQueue()
 
     number_cpu = min(mp.cpu_count() - 1, 1)
@@ -48,13 +48,13 @@ if __name__ == '__main__':
     pizza_test = Pizza(R, C, L, H, pizza)
 
     # Setting best score and best solution
-    # Special values for bestscores and bestslices because they need to be shared
+    # Special values for bestscores and best slices because they need to be shared among processes
     best_score = mp.Value('i', 0)
     slices = mp.Manager().list([[]])
 
-    # Preventing race condition issues 
-    lock = mp.Lock()
-        
+    # Thread preparation 
+    queue = mp.Queue()
+    lock = mp.Lock() # Prevents race conditions
 
     start = time()
 
