@@ -140,7 +140,6 @@ def worker(best_score, best_slices, number_tries, l, number_proc, q):
             
         l.release()
 
-    print(k)
     
 
      
