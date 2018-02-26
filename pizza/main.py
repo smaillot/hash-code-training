@@ -8,7 +8,7 @@ from time import time
 import numpy as np
 
 # custom
-from IO import read_input, write_output, write_array
+from IO import read_input, write_output, write_array, write_list
 from solution import *
 from score import compute_score
 from disp_debug import disp_pizza
@@ -56,4 +56,5 @@ for _ in tqdm(range(args.n), desc="looping"):
 
 with open('logs.out', 'w') as f:
 
+    write_list(f, len(logs))
     write_array(f, logs)
