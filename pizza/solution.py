@@ -12,6 +12,7 @@ from tqdm import tqdm
 from scipy import optimize
 import multiprocessing as mp
 import sys
+from collections import defaultdict
 
 def generate_all_slices(R, C, L, H):
     '''Specific
@@ -194,5 +195,59 @@ def generate_all_possible_slices(loaded_input):
     
     return all_possible_slices
 
+def is_inside_slice(pizza_cell, pizza_slice):
+    pizza_x = pizza_cell[0]
+    pizza_y = pizza_cell[1]
+    pizza_start_x = pizza_slice[0]
+    pizza_end_x = pizza_slice[2]
+    pizza_start_y = pizza_slice[1]
+    pizza_end_y = pizza_slice[3]
+    return ((pizza_x >= pizza_start_x) and (pizza_x <= pizza_end_x) and (pizza_y >= pizza_end_y) and (pizza_y <= pizza_end_y))
+
 def slices_to_graph(slices):
-    ''' Converts a list of slices to a graph '''
+    ''' Converts a list of slices to a graph 
+    We will use a dictionnary for this proof of concept and will then improve the system later on
+    graph[node] = adjacence_list'''
+    graph = defaultdict(list)
+    # We have to convert each slice to a node
+    node_number = 0
+    for pizza_slice in slices:
+        graph[node_number] = [pizza_slice, []]
+        node_number += 1
+    
+    for node_number in graph:
+        pizza_slice = graph[node_number][0]
+        # Is there a recover between pizza_slice and pizza_slice_2 ?
+        for node_number_concurrent in graph:
+            if node_number_concurrent != node_number:
+                pizza_slice_2 = graph[node_number_concurrent][0]
+                # We test all cells of our part until we meet nothing or another part
+                try:
+                    for k in range(pizza_slice[0], pizza_slice[2] + 1):
+                        for l in range(pizza_slice[1], pizza_slice[3] + 1):
+                            for pizza_slice_2 in slices:
+                                if is_inside_slice([k, l], pizza_slice_2):
+                                    graph[node_number][1].append(node_number_concurrent)
+                                    raise Exception()
+                except Exception:
+                    pass
+        
+    #print(len(graph))
+    return graph
+
+
+def remove_node_graph(node_to_pop, graph):
+    list_adjacence = graph[node_to_pop][1]
+    for node in list_adjacence:
+        
+        try:
+            
+            graph[node][1].remove(node_to_pop)
+            
+        except ValueError:
+            pass
+
+    del graph[node_to_pop]
+
+        
+
