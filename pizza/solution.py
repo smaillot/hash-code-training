@@ -102,27 +102,7 @@ def generate_solution(R, C, L, H, pizza, seed_number = []):
 
 
         
-def worker(best_score, best_solution, l, loaded_input, q, output):
-    """General
-    q.get() must be a loaded_input with the method generate_solution(int seed)
-    """
-    for seed in iter(q.get, 'STOP'):
 
-        # We calculate a solution from a seed and evaluate its score
-        solution = loaded_input.generate_solution(seed)
-        score = compute_score(solution)
-
-        # Lock state to prevent race condition
-        l.acquire()
-        #print(score)
-        # If our solution is better we save it in the shared variable
-        if score > best_score.value:
-            best_score.value = score
-            
-            best_solution[0] = solution
-        # End of atomic operation
-        l.release()
-        output.put(True)
 
 def solve(loaded_input, seeds, number_cpu):
     # Initializing best score and best solution
@@ -153,12 +133,38 @@ def solve(loaded_input, seeds, number_cpu):
 
     # Load loading screen
     
-    for _ in progress_bar:
+    for k in progress_bar:
         done_queue.get()
-        #progress_bar.set_description("Current best score : " + str(best_score.value))
+        if k % (len(progress_bar) // 100) == 0:
+            progress_bar.set_description("Current best score : " + str(best_score.value))
     
     # Stop all processes
     for p in processes:
         task_queue.put('STOP')
     
     return solution[0]
+
+def worker(best_score, best_solution, l, loaded_input, q, output):
+    """General
+    q.get() must be a loaded_input with the method generate_solution(int seed)
+    """
+    # We get the seed that will generate our solution
+    # STOP stops the worker
+    for seed in iter(q.get, 'STOP'):
+
+        # We calculate a solution from a seed and evaluate its score
+        solution = loaded_input.generate_solution(seed)
+        score = compute_score(solution)
+
+        # Lock state to prevent race condition
+        l.acquire()
+        #print(score)
+        # If our solution is better we save it in the shared variable
+        if score > best_score.value:
+            
+            best_score.value = score
+            
+            best_solution[0] = solution
+        # End of atomic operation
+        l.release()
+        output.put(True)
