@@ -40,7 +40,7 @@ logs = []
 for _ in tqdm(range(args.n), desc="looping"):
 
     start = time()
-    slices1 = generate_best_solution(R, C, L, H, pizza, 10)
+    slices1 = generate_best_solution(R, C, L, H, pizza, 1)
     step = time()
     slices2 = extend_slices(slices1, pizza, R, C, L, H)
     end = time()
@@ -56,5 +56,5 @@ for _ in tqdm(range(args.n), desc="looping"):
 
 with open('logs.out', 'w') as f:
 
-    write_list(f, len(logs))
+    write_list(f, [len(logs)])
     write_array(f, logs)
