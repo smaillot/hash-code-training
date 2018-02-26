@@ -8,7 +8,7 @@ def compute_emptyness(slices, R, C):
     
     pizza = np.zeros([R, C])
     
-    for i in tqdm(range(len(slices)), desc="Computing emptyness"):
+    for i in range(len(slices)):
     
         pizza[slices[i][0]:slices[i][2]+1, slices[i][1]:slices[i][3]+1] = 1
              
@@ -75,7 +75,7 @@ def extend_slices(input_slices, pizza, R, C, L, H):
     slices = np.copy(input_slices)
     pizza_filling = np.copy(compute_emptyness(slices, R, C))
     
-    for i in tqdm(range(len(slices)), desc="Extending slices"):
+    for i in range(len(slices)):
         
         pizza_slice, pizza_filling = extend_slice(slices[i], pizza_filling, pizza, R, C, L, H)
         slices[i] = pizza_slice

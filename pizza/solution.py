@@ -95,13 +95,12 @@ def generate_solution_slices(R, C, L, H, pizza):
 def generate_best_solution(R, C, L, H, pizza, number):
     best_score = 0
     best_slices = []
-    for _ in tqdm(range(number), desc = 'Testing solutions'):
+    for _ in range(number):
         slices = generate_solution_slices(R, C, L, H, pizza)
         score = compute_score(slices)
         if score > best_score:
             best_score = score
             best_slices = slices
-            print(best_score)
     return best_slices
     
                 

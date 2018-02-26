@@ -48,7 +48,7 @@ def check_overlapping(slices, r, c):
 
     pizza = np.zeros([r, c])
 
-    for i in tqdm(range(len(slices)), desc="checking overlapping"):
+    for i in range(len(slices)):
 
         if  np.sum(pizza[slices[i][0]:slices[i][2]+1, slices[i][1]:slices[i][3]+1]) > 0:
 
@@ -62,7 +62,7 @@ def check_overlapping(slices, r, c):
 def check_slices(slices, pizza, r, c, l, h):
 
     # print("Checking slices validity")
-    for i in tqdm(range(len(slices)), desc="checking slice validity"):
+    for i in range(len(slices)):
         
         if not is_valid_slice(slices[i], pizza, r, c, l, h):
 

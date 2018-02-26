@@ -8,7 +8,7 @@ from time import time
 import numpy as np
 
 # custom
-from IO import read_input, write_output
+from IO import read_input, write_output, write_array
 from solution import *
 from score import compute_score
 from disp_debug import disp_pizza
@@ -18,7 +18,7 @@ from extend_slices import extend_slices
 ## parsing arguments
 parser = argparse.ArgumentParser(description='Test program.')
 parser.add_argument('input', help='path to input file', type=argparse.FileType("rt"))
-parser.add_argument('output', help='path to output file', type=argparse.FileType("wt"))
+parser.add_argument('-n', type=int)
 parser.add_argument("-v", "--verbosity", type=int, choices=[0, 1, 2, 3],
                     default=1,
                     help="increase output verbosity,")
@@ -28,35 +28,32 @@ parser.add_argument("-v", "--verbosity", type=int, choices=[0, 1, 2, 3],
 #               3 -> debug
 
 args = parser.parse_args()
-    
+
 
 R, C, L, H, pizza = read_input(args.input)
-
-start = time()
+logs = []
 
 ###########################
 ## DO (GOOD) STUFF HERE
 ###########################
 
+for _ in tqdm(range(args.n), desc="looping"):
 
-# forced solution for small.in
-# slices = np.array([[0, 0, 0, 1], [1, 0, 2, 0]])
-slices = generate_best_solution(R, C, L, H, pizza, 10)
-slices = extend_slices(slices, pizza, R, C, L, H)
+    start = time()
+    slices1 = generate_best_solution(R, C, L, H, pizza, 10)
+    step = time()
+    slices2 = extend_slices(slices1, pizza, R, C, L, H)
+    end = time()
+    valid = check_slices(slices2, pizza, R, C, L, H)
+    
+    if valid:
 
+        logs.append([compute_score(slices1), compute_score(slices2), step-start, end-start])
       
 ###########################
 ## END OF STUFF
 ###########################
 
-end = time()
-write_output(args.output, slices)
-valid = check_slices(slices, pizza, R, C, L, H)
+with open('logs.out', 'w') as f:
 
-
-## compute score
-score = compute_score(slices) * valid
-
-print("\n\n\n")
-print("Score {:.0f} ({:0.2f}%) in {:.6f}s".format(score, 100 * score / (R * C), end - start))
-print("\n\n")
+    write_array(f, logs)
