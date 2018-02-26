@@ -36,7 +36,10 @@ i = 0
 while best < R*C:
     
     i += 1
-    print("it:\t"+str(i)+"\t\tbest:\t"+str(best)+"\t("+str(100 * best / R / C)+"%)")
+    try:
+        print("\nit:\t"+str(i)+"\t\tbest:\t"+str(best)+"\t("+str(100 * best / R / C)+"%)")
+    except:
+        pass
     start = time()
     slices1 = generate_best_solution(R, C, L, H, pizza, 1)
     step = time()
@@ -49,11 +52,16 @@ while best < R*C:
         score1 = compute_score(slices1)
         score2 = compute_score(slices2)
         logs.append([score1, score2, step-start, end-start])
-        print("\tfound:\t"+str(score2)+"\t("+str(100 * score2 / R / C)+"%)")
+        try:
+            print("\tfound:\t"+str(score2)+"\t("+str(100 * score2 / R / C)+"%)")
+        except:
+            pass
         
         if score2 > best:
             
             best = score2
+            args.output.seek(0)
+            args.output.truncate()
             write_output(args.output, slices2)
             print('\t\tnew best !')
             
