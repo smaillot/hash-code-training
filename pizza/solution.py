@@ -48,7 +48,7 @@ def gen_slice(starting_point, origin_slice):
         _, _, row, col = origin_slice
         return [x, y, row + x, col + y]
 
-def generate_solution(R, C, L, H, pizza, seed_number = []):
+def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
     """Specific
     Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
     """

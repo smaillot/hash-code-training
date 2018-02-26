@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # Loading input
     loaded_input = Loaded_input(*read_input(args.input))
     # Initiliasing seeds
-    seeds = [i for i in range(number_tries)]
+    seeds = [randint(0, number_tries**10) for _ in range(number_tries)]
     
     ###########################
     ## Find best solution
