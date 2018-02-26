@@ -6,7 +6,7 @@ from __future__ import print_function
 # custom
 from validation import is_valid_slice
 import numpy as np
-from random import shuffle, randint, seed
+from random import shuffle, randint, seed, choice
 from score import compute_score
 from tqdm import tqdm
 from scipy import optimize
@@ -56,21 +56,23 @@ def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
         seed(seed_number) # seed initialisation
 
     slices = []
+
+    #shuffle(possible_slices)
     
-    possible_slices_local = np.copy(possible_slices)
-    shuffle(possible_slices_local)
     covered_cases = np.zeros([R, C], dtype = bool)
     # We screen though each case
     for i in range(R):
         for j in range(C):
+            
             # Check if this case isn't covered yet
             if not(covered_cases[i, j]):
                 suitable_slice = False
+                
                 k_th_slice = 0
                 # We test all possible slices until all slices tested or one valid found
-                while not(suitable_slice) and k_th_slice < len(possible_slices_local):
+                while not(suitable_slice) and k_th_slice < len(possible_slices):
                     
-                    pizza_slice = gen_slice([i, j], possible_slices_local[k_th_slice])
+                    pizza_slice = gen_slice([i, j], choice(possible_slices))
                     
                     suitable_slice = is_valid_slice(pizza_slice, pizza, R, C, L, H)
                     if suitable_slice:
@@ -132,10 +134,12 @@ def solve(loaded_input, seeds, number_cpu):
         p.start()
 
     # Load loading screen
+
+    refresh_rate = max(1, (len(progress_bar) // 100))
     
     for k in progress_bar:
         done_queue.get()
-        if k % (len(progress_bar) // 100) == 0:
+        if k % refresh_rate == 0:
             progress_bar.set_description("Current best score : " + str(best_score.value))
     
     # Stop all processes

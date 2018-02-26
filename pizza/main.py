@@ -6,7 +6,7 @@ from __future__ import print_function
 from time import time
 import numpy as np
 import multiprocessing as mp 
-from random import randint
+import random
 from tqdm import tqdm
 # custom
 from IO import read_input, write_output, display_slices, parsing, print_score, disp_input
@@ -26,11 +26,12 @@ if __name__ == '__main__':
     number_cpu = args.p
 
     ''' This is where the fun begins'''
-
+    
     # Loading input
     loaded_input = Loaded_input(*read_input(args.input))
     # Initiliasing seeds
-    seeds = [randint(0, number_tries**10) for _ in range(number_tries)]
+    random.seed(time())
+    seeds = [random.randint(0, number_tries**10) for _ in range(number_tries)]
     
     ###########################
     ## Find best solution
