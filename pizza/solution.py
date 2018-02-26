@@ -6,7 +6,7 @@ from __future__ import print_function
 # custom
 from validation import is_valid_slice
 import numpy as np
-from random import shuffle, randint, seed
+from random import shuffle, randint, seed, choice
 from score import compute_score
 from tqdm import tqdm
 from scipy import optimize
@@ -45,7 +45,7 @@ def gen_slice(starting_point, origin_slice):
         _, _, row, col = origin_slice
         return [x, y, row + x, col + y]
 
-def generate_solution(R, C, L, H, pizza, seed_number = []):
+def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
     """Specific
     Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
     """
@@ -53,21 +53,23 @@ def generate_solution(R, C, L, H, pizza, seed_number = []):
         seed(seed_number) # seed initialisation
 
     slices = []
+
+    #shuffle(possible_slices)
     
-    possible_slices = generate_all_slices(R, C, L, H)
-    shuffle(possible_slices)
     covered_cases = np.zeros([R, C], dtype = bool)
     # We screen though each case
     for i in range(R):
         for j in range(C):
+            
             # Check if this case isn't covered yet
             if not(covered_cases[i, j]):
                 suitable_slice = False
+                
                 k_th_slice = 0
                 # We test all possible slices until all slices tested or one valid found
                 while not(suitable_slice) and k_th_slice < len(possible_slices):
                     
-                    pizza_slice = gen_slice([i, j], possible_slices[k_th_slice])
+                    pizza_slice = gen_slice([i, j], choice(possible_slices))
                     
                     suitable_slice = is_valid_slice(pizza_slice, pizza, R, C, L, H)
                     if suitable_slice:
@@ -99,37 +101,71 @@ def generate_solution(R, C, L, H, pizza, seed_number = []):
 
 
         
-def worker(best_score, best_solution, number_tries, l, number_proc, q):
+
+
+def solve(loaded_input, seeds, number_cpu):
+    # Initializing best score and best solution
+    # These are shared values between processes
+    best_score = mp.Value('i', 0)
+    solution = mp.Manager().list([[]])
+
+    # Threads preparation 
+    task_queue = mp.Queue()
+    done_queue = mp.Queue()
+    # Tasks queue
+    for seed in seeds:
+        task_queue.put(seed)
+    lock = mp.Lock() # Prevents race conditions
+
+    
+    ###########################
+    ## Parallel computing
+    ###########################
+    """ Do not touch anything
+    Change solution.worker to change the solution's generator behavior """
+    # We screen through each CPU and dedicate one thread for each
+    processes = [mp.Process(target=worker, args=(best_score, solution, lock, loaded_input, task_queue, done_queue)) for _ in range(number_cpu)]
+    progress_bar = tqdm(range(len(seeds)), desc = "Generating solutions")
+    for p in processes:
+        # Create a process that will race through the execution queue
+        p.start()
+
+    # Load loading screen
+
+    refresh_rate = max(1, (len(progress_bar) // 100))
+    
+    for k in progress_bar:
+        done_queue.get()
+        if k % refresh_rate == 0:
+            progress_bar.set_description("Current best score : " + str(best_score.value))
+    
+    # Stop all processes
+    for p in processes:
+        task_queue.put('STOP')
+    
+    return solution[0]
+
+def worker(best_score, best_solution, l, loaded_input, q, output):
     """General
     q.get() must be a loaded_input with the method generate_solution(int seed)
     """
-    # Progress bar that is updated by process 0
-    progress_bar = range(number_tries)
-    if number_proc == 0:
-        progress_bar = tqdm(range(number_tries), desc = "Advancement on process 0")
+    # We get the seed that will generate our solution
+    # STOP stops the worker
+    for seed in iter(q.get, 'STOP'):
 
-    # Pizza object get
-    pizza = q.get()
-    
-    for _ in progress_bar:
-        
         # We calculate a solution from a seed and evaluate its score
-        seed = randint(0, 2**31)        
-        slices = pizza.generate_solution(seed)
-        score = compute_score(slices)
-        
+        solution = loaded_input.generate_solution(seed)
+        score = compute_score(solution)
+
         # Lock state to prevent race condition
         l.acquire()
-
+        #print(score)
         # If our solution is better we save it in the shared variable
         if score > best_score.value:
+            
             best_score.value = score
             
-            best_solution[0] = slices
+            best_solution[0] = solution
         # End of atomic operation
         l.release()
-
-    
-
-     
-    
+        output.put(True)

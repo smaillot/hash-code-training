@@ -6,10 +6,12 @@ from __future__ import print_function
 from time import time
 import numpy as np
 import multiprocessing as mp 
+import random
+from tqdm import tqdm
 # custom
 from IO import read_input, write_output, display_slices, parsing, print_score, disp_input
 from pizza import Loaded_input
-from solution import worker
+from solution import solve
 from score import compute_score
 from validation import check_solution
 from matplotlib.pylab import plt
@@ -24,42 +26,20 @@ if __name__ == '__main__':
     number_cpu = args.p
 
     ''' This is where the fun begins'''
-
+    
     # Loading input
     loaded_input = Loaded_input(*read_input(args.input))
-
-    # Initializing best score and best solution
-    # These are shared values between processes
-    best_score = mp.Value('i', 0)
-    solution = mp.Manager().list([[]])
-
-    # Threads preparation 
-    queue = mp.Queue()
-    lock = mp.Lock() # Prevents race conditions
-
+    # Initiliasing seeds
+    random.seed(time())
+    seeds = [random.randint(0, number_tries**10) for _ in range(number_tries)]
+    
+    ###########################
+    ## Find best solution
+    ###########################
     start = time()
-    ###########################
-    ## Parallel computing
-    ###########################
-    """ Do not touch anything
-    Change solution.worker to change the solution's generator behavior """
-    # We screen through each CPU and dedicate one thread for each
-    for number_proc in range(number_cpu):
-        
-        # Creates a process that will be waiting for an argument
-        p = mp.Process(target=worker, args=(best_score, solution, number_tries // number_cpu, lock, number_proc, queue))
-        # Start de process
-        p.start()
-        # Send the loaded input to a process
-        queue.put(loaded_input)
-
-    # Waiting for all threads to finish
-    queue.close()
-    queue.join_thread()
-    p.join()
-
-    solution = solution[0]
-    ''' You can change things again '''
+    solution = solve(loaded_input, seeds, number_cpu)
+    end = time()
+    
     ###########################
     ## Post-treatment
     ###########################
@@ -71,7 +51,7 @@ if __name__ == '__main__':
     ## Checks solution and writes it out
     ###########################
 
-    end = time()
+    
 
     # Check if solution is valid
     valid = check_solution(solution, loaded_input)
