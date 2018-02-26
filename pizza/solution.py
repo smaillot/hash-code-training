@@ -10,6 +10,7 @@ from random import shuffle, randint, seed, choice
 from score import compute_score
 from tqdm import tqdm
 from scipy import optimize
+import multiprocessing as mp
 import sys
 
 def generate_all_slices(R, C, L, H):
@@ -54,7 +55,7 @@ def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
 
     slices = []
 
-    #shuffle(possible_slices)
+    
     
     covered_cases = np.zeros([R, C], dtype = bool)
     # We screen though each case
