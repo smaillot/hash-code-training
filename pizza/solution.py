@@ -11,9 +11,6 @@ from score import compute_score
 from tqdm import tqdm
 from scipy import optimize
 import sys
-import numexpr as ne
-import multiprocessing as mp
-
 
 def generate_all_slices(R, C, L, H):
     '''Specific
