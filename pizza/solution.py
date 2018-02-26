@@ -12,6 +12,7 @@ from tqdm import tqdm
 from scipy import optimize
 import multiprocessing as mp
 import sys
+import heapq
 
 def generate_all_slices(R, C, L, H):
     '''Specific
@@ -45,17 +46,32 @@ def gen_slice(starting_point, origin_slice):
         x, y = starting_point
         _, _, row, col = origin_slice
         return [x, y, row + x, col + y]
+    
 
-def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
+class WeightedSlice():
+    def __init__(self, s, w):
+        self.slice = s
+        self.weight = w
+    def __lt__(self, other_slice):
+        return self.weight < other_slice.weight
+
+def generate_solution(R, C, L, H, pizza, x):
     """Specific
     Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
+    x : gives a score to each slice, and we sort all the possible slices by weight
     """
-    if seed_number !=[]:
-        seed(seed_number) # seed initialisation
+    # if there are more slices than x then pad x with zeros
+    for _ in range(len(possible_slices) - len(x)):
+        x.append(0)
+    
+    # weights of each element
+    sorted_slices = []
+    for k in range(len(possible_slices)):
+        heapq.heappush(sorted_slices, WeightedSlice(possible_slices[k], x[k]))
 
     slices = []
-
-    
+    for k in range(len(possible_slices)):
+        
     
     covered_cases = np.zeros([R, C], dtype = bool)
     # We screen though each case
@@ -65,7 +81,9 @@ def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
             # Check if this case isn't covered yet
             if not(covered_cases[i, j]):
                 suitable_slice = False
-                
+                # we sort each pizza slice 
+                #TODO
+
                 k_th_slice = 0
                 # We test all possible slices until all slices tested or one valid found
                 while not(suitable_slice) and k_th_slice < len(possible_slices):
