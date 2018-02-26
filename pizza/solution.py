@@ -13,6 +13,7 @@ from scipy import optimize
 import sys
 import numexpr as ne
 import multiprocessing as mp
+from post_process import improve_solution
 
 
 def generate_all_slices(R, C, L, H):
@@ -48,13 +49,17 @@ def gen_slice(starting_point, origin_slice):
         _, _, row, col = origin_slice
         return [x, y, row + x, col + y]
 
-def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
+def generate_solution(loaded_input, possible_slices, seed_number = []):
     """Specific
     Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
     """
     if seed_number !=[]:
         seed(seed_number) # seed initialisation
-
+    pizza = loaded_input.pizza
+    R = loaded_input.R
+    C = loaded_input.C
+    L = loaded_input.L
+    H = loaded_input.H
     slices = []
     
     possible_slices_local = np.copy(possible_slices)
@@ -97,7 +102,7 @@ def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
                                 for l in range(pizza_slice[1], pizza_slice[3] + 1):
                                     covered_cases[k, l] = True
                     k_th_slice += 1
-           
+    improve_solution(slices, loaded_input)
     return slices
 
 
@@ -132,10 +137,10 @@ def solve(loaded_input, seeds, number_cpu):
         p.start()
 
     # Load loading screen
-    
+    refresh_rate = max((len(progress_bar) // 100), 1)
     for k in progress_bar:
         done_queue.get()
-        if k % (len(progress_bar) // 100) == 0:
+        if k % refresh_rate == 0:
             progress_bar.set_description("Current best score : " + str(best_score.value))
     
     # Stop all processes

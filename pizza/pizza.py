@@ -10,10 +10,5 @@ class Loaded_input:
         self.pizza = copy(pizza)
         self.possible_slices = generate_all_slices(R, C, L, H)
     def generate_solution(self, seed):
-        R = self.R
-        C = self.C
-        L = self.L
-        H = self.H
-        pizza = self.pizza
-        return generate_solution(R, C, L, H, pizza, self.possible_slices, seed)
+        return generate_solution(self, self.possible_slices, seed)
 
