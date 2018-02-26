@@ -13,7 +13,7 @@ def size_slice(slices):
     return (slices[3] - slices[1]+1) * (slices[2] - slices[0]+1)
 
 def is_valid_slice(slices, pizza, r, c, l, h):
-
+    '''
     if slices[2] < slices[0] or slices[3] < slices[1]:
         # print("Non valid slices")
         return False
@@ -21,7 +21,7 @@ def is_valid_slice(slices, pizza, r, c, l, h):
     if slices[0] < 0 or slices[2] > r or slices[1] < 0 or slices[3] > c:
         # print("Pizza slices out of dimensions")
         return False
-
+    '''
     nm = num_mushrooms(slices, pizza)
 
     if nm < l:
@@ -36,12 +36,12 @@ def is_valid_slice(slices, pizza, r, c, l, h):
         
         # print("Not enough tomatoes")
         return False
-
+    '''
     if area > h:
 
         # print("This slice is too big")
         return False
-
+    '''
     return True
 
 def check_overlapping(slices, r, c):
