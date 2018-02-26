@@ -249,5 +249,3 @@ def remove_node_graph(node_to_pop, graph):
 
     del graph[node_to_pop]
 
-        
-
