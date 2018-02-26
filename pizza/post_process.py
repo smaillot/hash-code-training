@@ -7,7 +7,7 @@ from validation import is_valid_slice
 def compute_emptyness(slices, R, C):
     
     pizza = np.zeros([R, C])
-    
+
     for i in tqdm(range(len(slices)), desc="Computing emptyness"):
     
         pizza[slices[i][0]:slices[i][2]+1, slices[i][1]:slices[i][3]+1] = 1
