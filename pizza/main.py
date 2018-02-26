@@ -18,14 +18,7 @@ from extend_slices import extend_slices
 ## parsing arguments
 parser = argparse.ArgumentParser(description='Test program.')
 parser.add_argument('input', help='path to input file', type=argparse.FileType("rt"))
-parser.add_argument('-n', type=int)
-parser.add_argument("-v", "--verbosity", type=int, choices=[0, 1, 2, 3],
-                    default=1,
-                    help="increase output verbosity,")
-# verbosity:    0 -> quiet
-#               1 -> warnings
-#               2 -> info
-#               3 -> debug
+parser.add_argument('output', help='path to outputfile', type=argparse.FileType("wt"))
 
 args = parser.parse_args()
 
@@ -37,8 +30,13 @@ logs = []
 ## DO (GOOD) STUFF HERE
 ###########################
 
-for _ in tqdm(range(args.n), desc="looping"):
+best = 0
+i = 0
 
+while best < R*C:
+    
+    i += 1
+    print("it:\t"+str(i)+"\t\tbest:\t"+str(best)+"\t("+str(100 * best / R / C)+"%)")
     start = time()
     slices1 = generate_best_solution(R, C, L, H, pizza, 1)
     step = time()
@@ -48,7 +46,17 @@ for _ in tqdm(range(args.n), desc="looping"):
     
     if valid:
 
-        logs.append([compute_score(slices1), compute_score(slices2), step-start, end-start])
+        score1 = compute_score(slices1)
+        score2 = compute_score(slices2)
+        logs.append([score1, score2, step-start, end-start])
+        print("\tfound:\t"+str(score2)+"\t("+str(100 * score2 / R / C)+"%)")
+        
+        if score2 > best:
+            
+            best = score2
+            write_output(args.output, slices2)
+            print('\t\tnew best !')
+            
       
 ###########################
 ## END OF STUFF
