@@ -170,3 +170,29 @@ def worker(best_score, best_solution, l, loaded_input, q, output):
         # End of atomic operation
         l.release()
         output.put(True)
+
+
+def generate_all_possible_slices(loaded_input):
+    ''' Generates all the possible pizza slices '''
+    R = loaded_input.R
+    C = loaded_input.C
+    L = loaded_input.L
+    H = loaded_input.H
+    pizza = loaded_input.pizza
+    all_slices = generate_all_slices(R, C, L, H)
+    all_possible_slices = []
+
+    # We screen through each pizza cell
+    for i in range(R):
+        for j in range(C):
+            for local_slice in all_slices:
+                translated_slice = gen_slice([i, j], local_slice)
+
+                if is_valid_slice(translated_slice, pizza, R, C, L, H):
+                    all_possible_slices.append(translated_slice)
+            #print(len(all_possible_slices))
+    
+    return all_possible_slices
+
+def slices_to_graph(slices):
+    ''' Converts a list of slices to a graph '''

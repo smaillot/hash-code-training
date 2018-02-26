@@ -51,7 +51,7 @@ def display_slices(solution, R, C, pizza):
     mask = np.zeros([R, C])
     slices = np.copy(solution)
     # Why ?
-    shuffle(slices)
+    #shuffle(slices)
 
     for i in range(len(slices)):
 
@@ -63,6 +63,7 @@ def display_slices(solution, R, C, pizza):
     axes[0].set_title('Slices')
     axes[1].imshow((mask > 0).astype(np.int))
     axes[1].set_title('Pizza used')
+    plt.show()
 
 def parsing():
     ## parsing arguments
