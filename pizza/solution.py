@@ -57,8 +57,8 @@ def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
 
     slices = []
     
-    possible_slices = generate_all_slices(R, C, L, H)
-    shuffle(possible_slices)
+    possible_slices_local = np.copy(possible_slices)
+    shuffle(possible_slices_local)
     covered_cases = np.zeros([R, C], dtype = bool)
     # We screen though each case
     for i in range(R):
@@ -68,9 +68,9 @@ def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
                 suitable_slice = False
                 k_th_slice = 0
                 # We test all possible slices until all slices tested or one valid found
-                while not(suitable_slice) and k_th_slice < len(possible_slices):
+                while not(suitable_slice) and k_th_slice < len(possible_slices_local):
                     
-                    pizza_slice = gen_slice([i, j], possible_slices[k_th_slice])
+                    pizza_slice = gen_slice([i, j], possible_slices_local[k_th_slice])
                     
                     suitable_slice = is_valid_slice(pizza_slice, pizza, R, C, L, H)
                     if suitable_slice:
