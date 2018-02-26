@@ -4,7 +4,7 @@ from __future__ import division
 from __future__ import print_function
 
 # custom
-from validation import is_valid_slice
+from validation import is_valid_slice_2
 import numpy as np
 from random import shuffle, randint, seed, choice
 from score import compute_score
@@ -72,7 +72,7 @@ def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
                     
                     pizza_slice = gen_slice([i, j], choice(possible_slices))
                     
-                    suitable_slice = is_valid_slice(pizza_slice, pizza, R, C, L, H)
+                    suitable_slice = is_valid_slice_2(pizza_slice, pizza, R, C, L, H)
                     if suitable_slice:
                     
                         # So far we only know the slice's within the pizza's borders and has the minimum amount of mushrooms and tomatoes.
