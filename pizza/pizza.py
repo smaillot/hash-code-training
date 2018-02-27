@@ -15,7 +15,7 @@ class Loaded_input:
         self.all_possible_slices = generate_all_possible_slices(self)
         self.graph = slices_to_graph(self.all_possible_slices)
         start = time()
-        print(len(self.graph))
+        print(self.graph)
         for i in range(len(self.graph)):
             
             remove_node_graph(i, self.graph)
