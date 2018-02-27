@@ -13,7 +13,7 @@ from scipy import optimize
 import multiprocessing as mp
 import sys
 from collections import defaultdict
-from networkx import Graph
+from IO import display_slices
 
 def generate_all_slices(R, C, L, H):
     '''Specific
@@ -48,7 +48,7 @@ def gen_slice(starting_point, origin_slice):
         _, _, row, col = origin_slice
         return [x, y, row + x, col + y]
 
-def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
+def generate_solution(loaded_input, seed_number = []):
     """Specific
     Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
     """
@@ -56,50 +56,12 @@ def generate_solution(R, C, L, H, pizza, possible_slices, seed_number = []):
         seed(seed_number) # seed initialisation
 
     slices = []
-
+    all_slices = list.copy(loaded_input.all_possible_slices)
+    shuffle(all_slices)
+    slices = slices_to_legit_slice(all_slices)
+    #print(slices)
+    #display_slices(all_slices, loaded_input.R, loaded_input.C, loaded_input.pizza)
     
-    
-    covered_cases = np.zeros([R, C], dtype = bool)
-    # We screen though each case
-    for i in range(R):
-        for j in range(C):
-            
-            # Check if this case isn't covered yet
-            if not(covered_cases[i, j]):
-                suitable_slice = False
-                
-                k_th_slice = 0
-                # We test all possible slices until all slices tested or one valid found
-                while not(suitable_slice) and k_th_slice < len(possible_slices):
-                    
-                    pizza_slice = gen_slice([i, j], choice(possible_slices))
-                    
-                    suitable_slice = is_valid_slice(pizza_slice, pizza, R, C, L, H)
-                    if suitable_slice:
-                    
-                        # So far we only know the slice's within the pizza's borders and has the minimum amount of mushrooms and tomatoes.
-                        # Thus we have to test if it doesn't cover another slice.
-                        # We test each case in the chosen slice
-                        try:
-                            for k in range(pizza_slice[0], pizza_slice[2] + 1):
-                                for l in range(pizza_slice[1], pizza_slice[3] + 1):
-                                    if covered_cases[k, l]:
-                                        # We accountered an already covered case
-                                        # The slice isn't suitable anymore
-                                        suitable_slice = False
-                                        raise Exception()
-                        except Exception:
-                            # The slice isn't suitable so we pass the exception
-                            pass
-                        else:
-                            # The slice is good and is added to the list of slices
-                            slices.append(pizza_slice)
-                            # We have to update our array of tested cases
-                            for k in range(pizza_slice[0], pizza_slice[2] + 1):
-                                for l in range(pizza_slice[1], pizza_slice[3] + 1):
-                                    covered_cases[k, l] = True
-                    k_th_slice += 1
-           
     return slices
 
 
@@ -181,7 +143,7 @@ def generate_all_possible_slices(loaded_input):
     L = loaded_input.L
     H = loaded_input.H
     pizza = loaded_input.pizza
-    all_slices = generate_all_slices(R, C, L, H)
+    all_slices = loaded_input.possible_slices
     all_possible_slices = []
 
     # We screen through each pizza cell
@@ -212,27 +174,22 @@ def slices_to_legit_slice(slices):
     ''' Converts a list of slices to a graph 
     We will use a dictionnary for this proof of concept and will then improve the system later on
     graph[node] = adjacence_list'''
-    graph = Graph()
-    # Matches a node number to a slice
-    convert_table = len(slices) * [[]]
-    # We have to convert each slice to a node
-    node_number = 0
-    for pizza_slice in slices:
-        graph.add_node(node_number)
-        convert_table[node_number] = pizza_slice
-        node_number += 1
     
-    for node_number in tqdm(range(len(slices)), desc = "Generating graph"):
+    output_slices = []
+    
+    
+    for pizza_slice in slices:
         
-        pizza_slice = convert_table[node_number]
+        
         # Is there a recover between pizza_slice and pizza_slice_2 ?
-        for node_number_concurrent in graph.nodes():
-            if node_number_concurrent != node_number:
-                pizza_slice_2 = convert_table[node_number_concurrent]
-                # We test all cells of our part until we meet nothing or another part
-            
-                if not is_inside_another_slice(pizza_slice, pizza_slice_2):
-                    graph
+        try:
+            for pizza_slice_2 in output_slices:
+                if is_inside_another_slice(pizza_slice, pizza_slice_2):
+                    raise Exception()
+            output_slices.append(pizza_slice)
+        except Exception:
+            pass
 
-    #print(len(graph))
-    return graph
+    #print(output_slices)
+    
+    return output_slices

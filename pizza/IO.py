@@ -51,7 +51,7 @@ def display_slices(solution, R, C, pizza):
     mask = np.zeros([R, C])
     slices = np.copy(solution)
     # Why ?
-    #shuffle(slices)
+    shuffle(slices)
 
     for i in range(len(slices)):
 

@@ -45,7 +45,7 @@ if __name__ == '__main__':
     ###########################
     
     # Improves the solution
-    solution = improve_solution(solution, loaded_input)
+    #solution = improve_solution(solution, loaded_input)
  
     ###########################
     ## Checks solution and writes it out
