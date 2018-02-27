@@ -70,7 +70,6 @@ while precision < args.s:
         final_slices += slices_transl
         n+=1
     
-    precision = np.floor((3 * precision + area) / 4)
 
     score_before = compute_score(final_slices)
     final_slices = extend_slices(final_slices, pizza, R_tot, C_tot, L, H)
@@ -84,6 +83,7 @@ while precision < args.s:
         print("Final score :\t" + str(score) + "\t( " + str(score / R_tot / C_tot * 100) + "% )")
     except:
         pass
+    precision = np.floor((4 * score + area) / 5)
       
 ###########################
 ## END OF STUFF
