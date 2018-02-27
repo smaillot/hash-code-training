@@ -137,6 +137,7 @@ def solve(loaded_input, seeds, number_cpu):
 
     refresh_rate = max(1, (len(progress_bar) // 100))
     
+    
     for k in progress_bar:
         done_queue.get()
         if k % refresh_rate == 0:
