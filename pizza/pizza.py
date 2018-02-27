@@ -4,6 +4,7 @@ import matplotlib.pylab as plt
 from IO import display_slices
 from time import time
 
+
 class Loaded_input:
     def __init__(self, R, C, L, H, pizza):
         self.R = R
@@ -15,7 +16,7 @@ class Loaded_input:
         self.all_possible_slices = generate_all_possible_slices(self)
         self.graph = slices_to_graph(self.all_possible_slices)
         start = time()
-        print(self.graph)
+        print(self.graph.edges())
         for i in range(len(self.graph)):
             
             remove_node_graph(i, self.graph)

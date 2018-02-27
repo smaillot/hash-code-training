@@ -13,6 +13,7 @@ from scipy import optimize
 import multiprocessing as mp
 import sys
 from collections import defaultdict
+from networkx import Graph
 
 def generate_all_slices(R, C, L, H):
     '''Specific
@@ -211,38 +212,32 @@ def slices_to_graph(slices):
     ''' Converts a list of slices to a graph 
     We will use a dictionnary for this proof of concept and will then improve the system later on
     graph[node] = adjacence_list'''
-    graph = defaultdict(list)
+    graph = Graph()
+    # Matches a node number to a slice
+    convert_table = len(slices) * [[]]
     # We have to convert each slice to a node
     node_number = 0
     for pizza_slice in slices:
-        graph[node_number] = [pizza_slice, []]
+        graph.add_node(node_number)
+        convert_table[node_number] = pizza_slice
         node_number += 1
     
-    for node_number in graph:
-        pizza_slice = graph[node_number][0]
+    for node_number in graph.nodes():
+        print(node_number)
+        pizza_slice = convert_table[node_number]
         # Is there a recover between pizza_slice and pizza_slice_2 ?
-        for node_number_concurrent in graph:
+        for node_number_concurrent in graph.nodes():
             if node_number_concurrent != node_number:
-                pizza_slice_2 = graph[node_number_concurrent][0]
+                pizza_slice_2 = convert_table[node_number_concurrent]
                 # We test all cells of our part until we meet nothing or another part
             
                 if is_inside_another_slice(pizza_slice, pizza_slice_2):
-                    graph[node_number][1].append(node_number_concurrent)
+                    graph.add_edge(node_number, node_number_concurrent)
 
     #print(len(graph))
     return graph
 
 
 def remove_node_graph(node_to_pop, graph):
-    list_adjacence = graph[node_to_pop][1]
-    for node in list_adjacence:
-        
-        try:
-            
-            graph[node][1].remove(node_to_pop)
-            
-        except ValueError:
-            pass
-
-    del graph[node_to_pop]
+    graph.remove_node(node_to_pop)
 
