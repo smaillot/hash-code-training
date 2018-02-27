@@ -137,6 +137,7 @@ def solve(loaded_input, seeds, number_cpu):
 
     refresh_rate = max(1, (len(progress_bar) // 100))
     
+
     for k in progress_bar:
         done_queue.get()
         if k % refresh_rate == 0:
@@ -222,8 +223,8 @@ def slices_to_graph(slices):
         convert_table[node_number] = pizza_slice
         node_number += 1
     
-    for node_number in graph.nodes():
-        print(node_number)
+    for node_number in tqdm(range(len(slices)), desc = "Generating graph"):
+        
         pizza_slice = convert_table[node_number]
         # Is there a recover between pizza_slice and pizza_slice_2 ?
         for node_number_concurrent in graph.nodes():
