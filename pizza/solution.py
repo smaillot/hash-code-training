@@ -208,7 +208,7 @@ def is_inside_another_slice(pizza_slice1, pizza_slice2):
 
     return ((pizza1_start_x <= pizza2_end_x) and (pizza1_end_x >= pizza2_start_x) and (pizza1_start_y <= pizza2_end_y) and (pizza1_end_y >= pizza2_start_y))
 
-def slices_to_graph(slices):
+def slices_to_legit_slice(slices):
     ''' Converts a list of slices to a graph 
     We will use a dictionnary for this proof of concept and will then improve the system later on
     graph[node] = adjacence_list'''
@@ -231,13 +231,8 @@ def slices_to_graph(slices):
                 pizza_slice_2 = convert_table[node_number_concurrent]
                 # We test all cells of our part until we meet nothing or another part
             
-                if is_inside_another_slice(pizza_slice, pizza_slice_2):
-                    graph.add_edge(node_number, node_number_concurrent)
+                if not is_inside_another_slice(pizza_slice, pizza_slice_2):
+                    graph
 
     #print(len(graph))
     return graph
-
-
-def remove_node_graph(node_to_pop, graph):
-    graph.remove_node(node_to_pop)
-
