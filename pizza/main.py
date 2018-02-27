@@ -10,6 +10,7 @@ import numpy as np
 # custom
 from IO import read_input, write_output, write_array, write_list
 from solution import *
+from solution import sub_pizzas
 from score import compute_score
 from disp_debug import disp_pizza
 from validation import check_slices
@@ -19,58 +20,63 @@ from extend_slices import extend_slices
 parser = argparse.ArgumentParser(description='Test program.')
 parser.add_argument('input', help='path to input file', type=argparse.FileType("rt"))
 parser.add_argument('output', help='path to outputfile', type=argparse.FileType("wt"))
+parser.add_argument('-i', help='height of subblocs', type=int)
+parser.add_argument('-j', help='width of subblocs', type=int)
+parser.add_argument('-s', help='score needed', type=int)
+parser.add_argument('-b', help='batch size', type=int)
 
 args = parser.parse_args()
 
 
-R, C, L, H, pizza = read_input(args.input)
+R_tot, C_tot, L, H, pizza = read_input(args.input)
 logs = []
+
+R = args.i
+C = args.j
+pizzas = sub_pizzas(pizza, R, C)
 
 ###########################
 ## DO (GOOD) STUFF HERE
 ###########################
 
-best = 0
-i = 0
-
-while best < R*C:
+final_slices = []
+n=1
     
-    i += 1
-    try:
-        print("\nit:\t"+str(i)+"\t\tbest:\t"+str(best)+"\t("+str(100 * best / R / C)+"%)")
-    except:
-        pass
-    start = time()
-    slices1 = generate_best_solution(R, C, L, H, pizza, 1)
-    step = time()
-    slices2 = extend_slices(slices1, pizza, R, C, L, H)
-    end = time()
-    valid = check_slices(slices2, pizza, R, C, L, H)
+for p, i, j in pizzas:
     
-    if valid:
+    R = p.shape[0]
+    C = p.shape[1]
+    lim = R * C * args.s / R_tot / C_tot
+    best = 0
 
-        score1 = compute_score(slices1)
-        score2 = compute_score(slices2)
-        logs.append([score1, score2, step-start, end-start])
+    while best < lim:
+        
+        slices = generate_best_solution(R, C, L, H, p, args.b)
+        score = compute_score(slices)
+        if score > best:
+            best = score
+            
         try:
-            print("\tfound:\t"+str(score2)+"\t("+str(100 * score2 / R / C)+"%)")
+            print("slice " + str(n) + " / " + str(len(pizzas)) + "\tbest\t" + str(best) + "\t( " + str(best / R / C * 100) + "% )\t/ " + str(lim) + "\t( " + str(lim / R / C * 100) + "% )")
         except:
             pass
         
-        if score2 > best:
-            
-            best = score2
-            args.output.seek(0)
-            args.output.truncate()
-            write_output(args.output, slices2)
-            print('\t\tnew best !')
-            
+    slices_transl = [[sl[0]+i, sl[1]+j, sl[2]+i, sl[3]+j] for sl in slices]
+    final_slices += slices_transl
+    n+=1
       
 ###########################
 ## END OF STUFF
 ###########################
 
-with open('logs.out', 'w') as f:
+score_before = compute_score(final_slices)
+final_slices = extend_slices(final_slices, pizza, R_tot, C_tot, L, H)
+valid = check_slices(final_slices, pizza, R_tot, C_tot, L, H)
+score = compute_score(final_slices) * valid
+write_output(args.output, final_slices)
 
-    write_list(f, [len(logs)])
-    write_array(f, logs)
+try:
+    print("Score :\t" + str(score_before) + "\t( " + str(score_before / R_tot / C_tot * 100) + "% )")
+    print("Final score :\t" + str(score) + "\t( " + str(score / R_tot / C_tot * 100) + "% )")
+except:
+    pass

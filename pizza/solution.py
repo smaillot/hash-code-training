@@ -103,5 +103,17 @@ def generate_best_solution(R, C, L, H, pizza, number):
             best_slices = slices
     return best_slices
     
-                
+def sub_pizzas(pizza, R, C):
     
+    p = np.copy(pizza)
+    pizzas = []
+    h = int(np.ceil(p.shape[0] / R))
+    w = int(np.ceil(p.shape[1] / C))
+    
+    for i in range(h):
+        
+        for j in range(w):
+            
+            pizzas.append([p[i*R:(i+1)*R, j*C:(j+1)*C], i*R, j*C])
+
+    return pizzas
