@@ -40,21 +40,24 @@ pizzas = sub_pizzas(pizza, R, C)
 ###########################
 
 area = R_tot * C_tot
-precision = np.floor(area / 2)
+score = 0
+global_best = 0
+res = np.zeros(len(pizzas))
 
-while precision < args.s:
+while score < args.s:
     
     final_slices = []
-    n=1
         
-    for p, i, j in pizzas:
+    for n in range(len(pizzas)):
+        
+        p, i, j = pizzas[n]
         
         R = p.shape[0]
         C = p.shape[1]
-        lim = R * C * precision / area
-        best = 0
-    
-        while best < lim:
+        best = -1
+   
+        score=0
+        while best < res[n]:
             
             slices = generate_best_solution(R, C, L, H, p, args.b)
             score = compute_score(slices)
@@ -62,28 +65,29 @@ while precision < args.s:
                 best = score
                 
             try:
-                print("slice " + str(n) + " / " + str(len(pizzas)) + "\tbest\t" + str(best) + "( " + str(best / R / C * 100) + "% )\t/ " + str(lim) + "( " + str(lim / R / C * 100) + "% )")
+                print("slice " + str(n+1) + " / " + str(len(pizzas)) + "\tbest\t" + str(best) + "( " + str(best / R / C * 100) + "% )\t/ " + str(res[n]) + "( " + str(res[n] / R / C * 100) + "% )" + "\nglobal best\t" + str(global_best))
             except:
                 pass
             
+        res[n] = best
         slices_transl = [[sl[0]+i, sl[1]+j, sl[2]+i, sl[3]+j] for sl in slices]
         final_slices += slices_transl
-        n+=1
-    
 
     score_before = compute_score(final_slices)
     final_slices = extend_slices(final_slices, pizza, R_tot, C_tot, L, H)
     valid = check_slices(final_slices, pizza, R_tot, C_tot, L, H)
     score = compute_score(final_slices) * valid
-    args.output.seek(0) 
-    args.output.truncate()       
-    write_output(args.output, final_slices)
-    try:
-        print("Score :\t" + str(score_before) + "\t( " + str(score_before / R_tot / C_tot * 100) + "% )")
-        print("Final score :\t" + str(score) + "\t( " + str(score / R_tot / C_tot * 100) + "% )")
-    except:
-        pass
-    precision = np.floor((4 * score + area) / 5)
+
+    if score > global_best:
+        global_best = score
+        args.output.seek(0) 
+        args.output.truncate()       
+        write_output(args.output, final_slices)
+        try:
+            print("Score :\t" + str(score_before) + "\t( " + str(score_before / R_tot / C_tot * 100) + "% )")
+            print("Final score :\t" + str(score) + "\t( " + str(score / R_tot / C_tot * 100) + "% )")
+        except:
+            pass
       
 ###########################
 ## END OF STUFF
