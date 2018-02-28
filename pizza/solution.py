@@ -13,7 +13,8 @@ from scipy import optimize
 import multiprocessing as mp
 import sys
 import heapq
-
+from collections import defaultdict
+from IO import display_slices
 def generate_all_slices(R, C, L, H):
     '''Specific
     L : minimum number of each ingredient in a slice
@@ -55,68 +56,33 @@ class WeightedSlice():
     def __lt__(self, other_slice):
         return self.weight < other_slice.weight
 
-def generate_solution(R, C, L, H, pizza, x):
+def generate_solution(loaded_input, x):
     """Specific
-    Tests each case if it isn't covered by a slice, test all possible slices that can be fitted onto this slice, check the next case
+    Tests each cell if it isn't covered by a slice, test all possible slices that can be fitted onto this cell, check the next case
     x : gives a score to each slice, and we sort all the possible slices by weight
     """
+
+    all_possible_slices = loaded_input.all_possible_slices
     # if there are more slices than x then pad x with zeros
-    for _ in range(len(possible_slices) - len(x)):
+    for _ in range(len(all_possible_slices) - len(x)):
         x.append(0)
     
     # weights of each element
-    sorted_slices = []
-    for k in range(len(possible_slices)):
-        heapq.heappush(sorted_slices, WeightedSlice(possible_slices[k], x[k]))
+    heap_slices = []
+    for k in range(len(all_possible_slices)):
+        heapq.heappush(heap_slices, WeightedSlice(all_possible_slices[k], x[k]))
 
     slices = []
-    for k in range(len(possible_slices)):
+    # filters invalid slices
+    for k in range(len(all_possible_slices)):
+        s = heapq.heappop(heap_slices).slice
+        if is_valid_slice(s, loaded_input.pizza, loaded_input.R, loaded_input.C, loaded_input.L, loaded_input.H):
+            slices.append(s)
         
-    
-    covered_cases = np.zeros([R, C], dtype = bool)
-    # We screen though each case
-    for i in range(R):
-        for j in range(C):
-            
-            # Check if this case isn't covered yet
-            if not(covered_cases[i, j]):
-                suitable_slice = False
-                # we sort each pizza slice 
-                #TODO
+    #print(len(slices))
 
-                k_th_slice = 0
-                # We test all possible slices until all slices tested or one valid found
-                while not(suitable_slice) and k_th_slice < len(possible_slices):
-                    
-                    pizza_slice = gen_slice([i, j], choice(possible_slices))
-                    
-                    suitable_slice = is_valid_slice(pizza_slice, pizza, R, C, L, H)
-                    if suitable_slice:
-                    
-                        # So far we only know the slice's within the pizza's borders and has the minimum amount of mushrooms and tomatoes.
-                        # Thus we have to test if it doesn't cover another slice.
-                        # We test each case in the chosen slice
-                        try:
-                            for k in range(pizza_slice[0], pizza_slice[2] + 1):
-                                for l in range(pizza_slice[1], pizza_slice[3] + 1):
-                                    if covered_cases[k, l]:
-                                        # We accountered an already covered case
-                                        # The slice isn't suitable anymore
-                                        suitable_slice = False
-                                        raise Exception()
-                        except Exception:
-                            # The slice isn't suitable so we pass the exception
-                            pass
-                        else:
-                            # The slice is good and is added to the list of slices
-                            slices.append(pizza_slice)
-                            # We have to update our array of tested cases
-                            for k in range(pizza_slice[0], pizza_slice[2] + 1):
-                                for l in range(pizza_slice[1], pizza_slice[3] + 1):
-                                    covered_cases[k, l] = True
-                    k_th_slice += 1
            
-    return slices
+    return slices_to_legit_slice(slices)
 
 
         
@@ -188,3 +154,59 @@ def worker(best_score, best_solution, l, loaded_input, q, output):
         # End of atomic operation
         l.release()
         output.put(True)
+
+def generate_all_possible_slices(loaded_input):
+    ''' Generates all the possible pizza slices '''
+    R = loaded_input.R
+    C = loaded_input.C
+    L = loaded_input.L
+    H = loaded_input.H
+    pizza = loaded_input.pizza
+    all_slices = loaded_input.possible_slices
+    all_possible_slices = []
+
+    # We screen through each pizza cell
+    for i in range(R):
+        for j in range(C):
+            for local_slice in all_slices:
+                translated_slice = gen_slice([j, i], local_slice)
+
+                if is_valid_slice(translated_slice, pizza, R, C, L, H):
+                    all_possible_slices.append(translated_slice)
+            #print(len(all_possible_slices))
+    
+    return all_possible_slices
+
+def is_inside_another_slice(pizza_slice1, pizza_slice2):
+    pizza1_start_x = pizza_slice1[0]
+    pizza1_start_y = pizza_slice1[1]
+    pizza1_end_x = pizza_slice1[2]
+    pizza1_end_y = pizza_slice1[3]
+    pizza2_start_x = pizza_slice2[0]
+    pizza2_end_x = pizza_slice2[2]
+    pizza2_start_y = pizza_slice2[1]
+    pizza2_end_y = pizza_slice2[3]
+
+    return ((pizza1_start_x <= pizza2_end_x) and (pizza1_end_x >= pizza2_start_x) and (pizza1_start_y <= pizza2_end_y) and (pizza1_end_y >= pizza2_start_y))
+
+def slices_to_legit_slice(slices):
+    ''' removes slices that are too big '''
+    
+    output_slices = []
+    
+    
+    for pizza_slice in slices:
+        
+        # Is there an overlap between pizza_slice and pizza_slice_2 ?
+        try:
+            # Evil exception trick --siiiiicc--
+            for pizza_slice_2 in output_slices:
+                if is_inside_another_slice(pizza_slice, pizza_slice_2):
+                    raise Exception()
+            output_slices.append(pizza_slice)
+        except Exception:
+            pass
+
+    #print(output_slices)
+    
+    return output_slices

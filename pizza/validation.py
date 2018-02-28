@@ -13,12 +13,11 @@ def size_slice(slices):
     return (slices[3] - slices[1]+1) * (slices[2] - slices[0]+1)
 
 def is_valid_slice(slices, pizza, r, c, l, h):
-
     if slices[2] < slices[0] or slices[3] < slices[1]:
         # print("Non valid slices")
         return False
 
-    if slices[0] < 0 or slices[2] > r or slices[1] < 0 or slices[3] > c:
+    if slices[0] < 0 or slices[2] >= r or slices[1] < 0 or slices[3] >= c:
         # print("Pizza slices out of dimensions")
         return False
 
